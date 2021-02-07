@@ -1,4 +1,4 @@
-.PHONY: dev build run push release release-multi deploy
+.PHONY: install install-dev dev build run push release release-multi deploy
 
 DOCKER_REPOSITERY=dixneuf19
 IMAGE_NAME=whatsonfip
@@ -6,6 +6,12 @@ IMAGE_TAG=$(shell git rev-parse --short HEAD)
 DOCKER_IMAGE_PATH=$(DOCKER_REPOSITERY)/$(IMAGE_NAME):$(IMAGE_TAG)
 APP_NAME=whats-on-fip
 KUBE_NAMESPACE=fip
+
+install:
+	pip install -r requirements.txt
+
+install-dev: install
+	pip install -r requirements-dev.txt
 
 dev:
 	uvicorn whatsonfip.main:app --reload
