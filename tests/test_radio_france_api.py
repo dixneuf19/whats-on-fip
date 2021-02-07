@@ -144,7 +144,7 @@ FIP_songs_2020_05_20_11h_12h_UTC = [
         "year": 2010,
         "musical_kind": None,
         "external_urls": {},
-        "label": "CELESTONE",
+        "label": None,
         "cover_url": None,
     },
     {
