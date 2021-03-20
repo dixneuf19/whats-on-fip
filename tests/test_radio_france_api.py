@@ -94,7 +94,7 @@ FIP_songs_2020_05_20_11h_12h_UTC = [
         "year": 2003,
         "musical_kind": None,
         "external_urls": {},
-        "label": "BLUE NOTE",
+        "label": "BLUENOTE",
         "cover_url": None,
     },
     {
@@ -104,7 +104,7 @@ FIP_songs_2020_05_20_11h_12h_UTC = [
         "year": 2003,
         "musical_kind": None,
         "external_urls": {},
-        "label": "BLUE NOTE",
+        "label": "BLUENOTE",
         "cover_url": None,
     },
     {
@@ -144,7 +144,7 @@ FIP_songs_2020_05_20_11h_12h_UTC = [
         "year": 2010,
         "musical_kind": None,
         "external_urls": {},
-        "label": None,
+        "label": "CELESTONE",
         "cover_url": None,
     },
     {
@@ -244,7 +244,7 @@ FIP_songs_2020_05_20_11h_12h_UTC = [
         "year": 1971,
         "musical_kind": None,
         "external_urls": {},
-        "label": "CBS",
+        "label": "POLYDOR",
         "cover_url": None,
     },
     {
