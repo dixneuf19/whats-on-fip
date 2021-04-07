@@ -28,3 +28,9 @@ def test_get_api_status():
     response = client.get("/api-status")
     assert response.status_code == 200
     assert response.json()["code"] in (200, 500)
+
+
+def test_get_live_meuh():
+    response = client.get("/meuh")
+    assert response.status_code == 200
+    assert Track(**response.json())

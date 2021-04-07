@@ -13,6 +13,7 @@ from whatsonfip.radio_france_api import APIClient, LiveUnavailableException
 from whatsonfip.models import Track, Station, APIStatus, Message
 from whatsonfip.unofficial_api import get_now_unofficial
 from whatsonfip.spotify_api import add_spotify_external_url
+from whatsonfip.radio_meuh_api import get_current_song as get_current_meuh
 
 load_dotenv()
 
@@ -101,3 +102,17 @@ async def get_health():
 @app.get("/api-status", response_model=APIStatus)
 async def get_api_status():
     return {"code": await api_client.get_api_status()}
+
+
+@app.get("/meuh", response_model=Track)
+async def get_live_meuh() -> Track:
+    track = get_current_meuh()
+    # Add spotify external_url if necessary
+    try:
+        if not ("spotify" in track.external_urls):
+            logger.info("Looking for the track on spotify")
+            track = add_spotify_external_url(track)
+    except Exception as e:
+        logger.warning("Error while using spotify API: " + str(e))
+
+    return track
