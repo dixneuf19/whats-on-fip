@@ -1,6 +1,6 @@
 # What's on FIP ?
 
-[![Test](https://github.com/dixneuf19/whatsOnFIP/workflows/Test/badge.svg)](https://github.com/dixneuf19/whatsOnFIP/actions?query=workflow%3ATest) [![Build and release](https://github.com/dixneuf19/whatsOnFIP/workflows/Build%20and%20release/badge.svg)](https://github.com/dixneuf19/whatsOnFIP/actions?query=workflow%3A"Build+and+release") [![CodeQL](https://github.com/dixneuf19/whatsOnFIP/workflows/CodeQL/badge.svg)](https://github.com/dixneuf19/whatsOnFIP/actions?query=workflow%3ACodeQL)
+[![TestS](https://github.com/dixneuf19/whatsOnFIP/actions/workflows/test.yaml/badge.svg)](https://github.com/dixneuf19/whatsOnFIP/actions/workflows/test.yaml) [![CD](https://github.com/dixneuf19/whatsOnFIP/actions/workflows/build-and-release.yaml/badge.svg)](https://github.com/dixneuf19/whatsOnFIP/actions/workflows/build-and-release.yaml) [![CodeQL](https://github.com/dixneuf19/whatsOnFIP/actions/workflows/codeql-analysis.yml/badge.svg?branch=master)](https://github.com/dixneuf19/whatsOnFIP/actions/workflows/codeql-analysis.yml)
 
 ## Local development
 
