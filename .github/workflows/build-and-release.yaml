@@ -75,7 +75,7 @@ jobs:
 
       - name: Push the modification to the repo
         run: |
-          git config user.name "Github Actions - ${{ env.GITHUB_ACTION }}"
+          git config user.name "Github Actions - $GITHUB_REPOSITORY"
           git config user.email github-actions@github.com
           git add "${{ env.INFRA_REPO_PATH }}/values.yaml"
           git commit -m "chore(${{ env.INFRA_REPO_PATH }}): update to version ${{ env.DOCKER_TAG }}"
