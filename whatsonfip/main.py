@@ -9,7 +9,7 @@ from fastapi import FastAPI, status, Query
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 
-from whatsonfip.radio_france_api import APIClient, LiveUnavailableException
+from whatsonfip import radio_france_api
 from whatsonfip.models import Track, Station, APIStatus, Message
 from whatsonfip.unofficial_api import get_now_unofficial
 from whatsonfip.spotify_api import add_spotify_external_url
@@ -25,8 +25,6 @@ app = FastAPI(
     description="Let's find out what your listening on this eclectic radio!",
     version="0.1.0",
 )
-
-api_client = APIClient()
 
 
 @app.get(
@@ -61,8 +59,8 @@ async def get_live(
     if track is None:
         # Radio France OpenAPI api: less reliable and complete
         try:
-            track = await api_client.execute_live_query(station)
-        except LiveUnavailableException as e:
+            track = radio_france_api.execute_live_query(station)
+        except radio_france_api.LiveUnavailableException as e:
             logger.warning(e)
             return JSONResponse(
                 content=jsonable_encoder(
@@ -86,12 +84,12 @@ async def get_live(
 
 @app.get("/grid", response_model=List[Track])
 async def get_grid(start: int, end: int, station: str = "FIP") -> List[Track]:
-    return await api_client.execute_grid_query(start, end, station)
+    return radio_france_api.execute_grid_query(start, end, station)
 
 
 @app.get("/stations", response_model=List[Station])
 async def get_stations() -> List[Station]:
-    return await api_client.execute_stations_enum_query()
+    return radio_france_api.execute_stations_enum_query()
 
 
 @app.get("/health")
@@ -101,7 +99,7 @@ async def get_health():
 
 @app.get("/api-status", response_model=APIStatus)
 async def get_api_status():
-    return {"code": await api_client.get_api_status()}
+    return {"code": radio_france_api.get_api_status()}
 
 
 @app.get("/meuh", response_model=Track)
