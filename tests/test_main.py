@@ -26,6 +26,7 @@ def test_get_health():
 
 def test_get_api_status():
     response = client.get("/api-status")
+    print(response)
     assert response.status_code == 200
     assert response.json()["code"] in (200, 500)
 

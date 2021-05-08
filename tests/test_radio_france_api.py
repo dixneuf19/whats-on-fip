@@ -1,7 +1,13 @@
 import pytest
 from fastapi.encoders import jsonable_encoder
 
-from whatsonfip.radio_france_api import APIClient, LiveUnavailableException
+from whatsonfip.radio_france_api import (
+    LiveUnavailableException,
+    execute_grid_query,
+    execute_live_query,
+    execute_stations_enum_query,
+    get_api_status,
+)
 from whatsonfip.models import Station, Track
 
 radio_france_stations = [
@@ -94,7 +100,7 @@ FIP_songs_2020_05_20_11h_12h_UTC = [
         "year": 2003,
         "musical_kind": None,
         "external_urls": {},
-        "label": "BLUENOTE",
+        "label": "Blue Note",
         "cover_url": None,
     },
     {
@@ -104,7 +110,7 @@ FIP_songs_2020_05_20_11h_12h_UTC = [
         "year": 2003,
         "musical_kind": None,
         "external_urls": {},
-        "label": "BLUENOTE",
+        "label": "Blue Note",
         "cover_url": None,
     },
     {
@@ -124,7 +130,7 @@ FIP_songs_2020_05_20_11h_12h_UTC = [
         "year": 2020,
         "musical_kind": None,
         "external_urls": {},
-        "label": "INTERNATIONAL ANTHEM",
+        "label": "International Anthem",
         "cover_url": None,
     },
     {
@@ -144,7 +150,7 @@ FIP_songs_2020_05_20_11h_12h_UTC = [
         "year": 2010,
         "musical_kind": None,
         "external_urls": {},
-        "label": "CELESTONE",
+        "label": None,
         "cover_url": None,
     },
     {
@@ -259,31 +265,25 @@ FIP_songs_2020_05_20_11h_12h_UTC = [
     },
 ]
 
-client = APIClient()
 
-
-@pytest.mark.asyncio
-async def test_execute_grid_query():
-    response = await client.execute_grid_query(1589972400, 1589976000, "FIP")
+def test_execute_grid_query():
+    response = execute_grid_query(1589972400, 1589976000, "FIP")
     assert jsonable_encoder(response) == FIP_songs_2020_05_20_11h_12h_UTC
 
 
-@pytest.mark.asyncio
-async def test_execute_live_query():
+def test_execute_live_query():
     try:
-        response = await client.execute_live_query("FIP")
+        response = execute_live_query("FIP")
     except LiveUnavailableException as e:
         return
     assert Track(**response.dict())
 
 
-@pytest.mark.asyncio
-async def test_execute_stations_enum_query():
-    response = await client.execute_stations_enum_query()
+def test_execute_stations_enum_query():
+    response = execute_stations_enum_query()
     assert [station.name for station in response] == radio_france_stations
 
 
-@pytest.mark.asyncio
-async def test_get_api_status():
-    response = await client.get_api_status()
+def test_get_api_status():
+    response = get_api_status()
     assert response in (200, 500)
