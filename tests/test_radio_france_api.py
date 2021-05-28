@@ -1,4 +1,5 @@
 import pytest
+from unittest.mock import ANY
 from fastapi.encoders import jsonable_encoder
 
 from whatsonfip.radio_france_api import (
@@ -100,7 +101,7 @@ FIP_songs_2020_05_20_11h_12h_UTC = [
         "year": 2003,
         "musical_kind": None,
         "external_urls": {},
-        "label": "Blue Note",
+        "label": ANY,
         "cover_url": None,
     },
     {
@@ -110,7 +111,7 @@ FIP_songs_2020_05_20_11h_12h_UTC = [
         "year": 2003,
         "musical_kind": None,
         "external_urls": {},
-        "label": "Blue Note",
+        "label": ANY,
         "cover_url": None,
     },
     {
@@ -120,7 +121,7 @@ FIP_songs_2020_05_20_11h_12h_UTC = [
         "year": 1994,
         "musical_kind": None,
         "external_urls": {},
-        "label": "COLUMBIA",
+        "label": ANY,
         "cover_url": None,
     },
     {
@@ -130,7 +131,7 @@ FIP_songs_2020_05_20_11h_12h_UTC = [
         "year": 2020,
         "musical_kind": None,
         "external_urls": {},
-        "label": "International Anthem",
+        "label": ANY,
         "cover_url": None,
     },
     {
@@ -140,7 +141,7 @@ FIP_songs_2020_05_20_11h_12h_UTC = [
         "year": 2003,
         "musical_kind": None,
         "external_urls": {},
-        "label": "MDG",
+        "label": ANY,
         "cover_url": None,
     },
     {
@@ -150,7 +151,7 @@ FIP_songs_2020_05_20_11h_12h_UTC = [
         "year": 2010,
         "musical_kind": None,
         "external_urls": {},
-        "label": None,
+        "label": ANY,
         "cover_url": None,
     },
     {
@@ -160,7 +161,7 @@ FIP_songs_2020_05_20_11h_12h_UTC = [
         "year": 1967,
         "musical_kind": None,
         "external_urls": {},
-        "label": "MUSIC CLUB",
+        "label": ANY,
         "cover_url": None,
     },
     {
@@ -170,7 +171,7 @@ FIP_songs_2020_05_20_11h_12h_UTC = [
         "year": 1967,
         "musical_kind": None,
         "external_urls": {},
-        "label": "POLYDOR",
+        "label": ANY,
         "cover_url": None,
     },
     {
@@ -180,7 +181,7 @@ FIP_songs_2020_05_20_11h_12h_UTC = [
         "year": 1969,
         "musical_kind": None,
         "external_urls": {},
-        "label": "STAX",
+        "label": ANY,
         "cover_url": None,
     },
     {
@@ -190,7 +191,7 @@ FIP_songs_2020_05_20_11h_12h_UTC = [
         "year": 1968,
         "musical_kind": None,
         "external_urls": {},
-        "label": "POLYDOR",
+        "label": ANY,
         "cover_url": None,
     },
     {
@@ -200,7 +201,7 @@ FIP_songs_2020_05_20_11h_12h_UTC = [
         "year": 2019,
         "musical_kind": None,
         "external_urls": {},
-        "label": "TRICATEL",
+        "label": ANY,
         "cover_url": None,
     },
     {
@@ -210,7 +211,7 @@ FIP_songs_2020_05_20_11h_12h_UTC = [
         "year": 1997,
         "musical_kind": None,
         "external_urls": {},
-        "label": "NINJA TUNE",
+        "label": ANY,
         "cover_url": None,
     },
     {
@@ -220,7 +221,7 @@ FIP_songs_2020_05_20_11h_12h_UTC = [
         "year": 2019,
         "musical_kind": None,
         "external_urls": {},
-        "label": "NOVA RECORDS/WAGRAM",
+        "label": ANY,
         "cover_url": None,
     },
     {
@@ -230,7 +231,7 @@ FIP_songs_2020_05_20_11h_12h_UTC = [
         "year": 1976,
         "musical_kind": None,
         "external_urls": {},
-        "label": "VICTOR",
+        "label": ANY,
         "cover_url": None,
     },
     {
@@ -240,7 +241,7 @@ FIP_songs_2020_05_20_11h_12h_UTC = [
         "year": 1969,
         "musical_kind": None,
         "external_urls": {},
-        "label": "EMI",
+        "label": ANY,
         "cover_url": None,
     },
     {
@@ -250,7 +251,7 @@ FIP_songs_2020_05_20_11h_12h_UTC = [
         "year": 1971,
         "musical_kind": None,
         "external_urls": {},
-        "label": "POLYDOR",
+        "label": ANY,
         "cover_url": None,
     },
     {
@@ -260,7 +261,7 @@ FIP_songs_2020_05_20_11h_12h_UTC = [
         "year": 2014,
         "musical_kind": None,
         "external_urls": {},
-        "label": "LABEL INCONNU",
+        "label": ANY,
         "cover_url": None,
     },
 ]
