@@ -1,7 +1,7 @@
 from fastapi.testclient import TestClient
 
 from whatsonfip.main import app
-from whatsonfip.models import Track, Station
+from whatsonfip.models import Station, Track
 
 client = TestClient(app)
 

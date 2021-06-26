@@ -1,7 +1,9 @@
-import pytest
 from unittest.mock import ANY
+
+import pytest
 from fastapi.encoders import jsonable_encoder
 
+from whatsonfip.models import Station, Track
 from whatsonfip.radio_france_api import (
     LiveUnavailableException,
     execute_grid_query,
@@ -9,7 +11,6 @@ from whatsonfip.radio_france_api import (
     execute_stations_enum_query,
     get_api_status,
 )
-from whatsonfip.models import Station, Track
 
 radio_france_stations = [
     "FRANCEINTER",

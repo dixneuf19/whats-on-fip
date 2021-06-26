@@ -1,7 +1,7 @@
 import pytest
 
-from whatsonfip.unofficial_api import get_now_unofficial
 from whatsonfip.models import Track
+from whatsonfip.unofficial_api import get_now_unofficial
 
 
 @pytest.mark.asyncio

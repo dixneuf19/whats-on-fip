@@ -1,7 +1,7 @@
 import pytest
 
-from whatsonfip.radio_meuh_api import get_current_song
 from whatsonfip.models import Track
+from whatsonfip.radio_meuh_api import get_current_song
 
 
 @pytest.mark.asyncio

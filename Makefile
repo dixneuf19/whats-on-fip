@@ -17,9 +17,11 @@ dev:
 	uvicorn whatsonfip.main:app --reload
 
 format:
+	isort --profile black .
 	black .
 
 check-format:
+	isort --profile black --check .
 	black --check .
 
 test:
