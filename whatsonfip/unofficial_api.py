@@ -1,12 +1,11 @@
 import os
 from typing import List
 
-from loguru import logger
-from dotenv import load_dotenv
-
 import requests
+from dotenv import load_dotenv
+from loguru import logger
 
-from whatsonfip.models import Track, Station
+from whatsonfip.models import Station, Track
 
 load_dotenv()
 

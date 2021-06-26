@@ -1,9 +1,8 @@
 import os
 
+import requests
 from dotenv import load_dotenv
 from loguru import logger
-
-import requests
 
 from whatsonfip.models import Track
 

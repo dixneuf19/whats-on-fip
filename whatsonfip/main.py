@@ -1,19 +1,17 @@
 import os
 from typing import List
 
+from dotenv import load_dotenv
+from fastapi import FastAPI, Query, status
+from fastapi.encoders import jsonable_encoder
+from fastapi.responses import JSONResponse
 from loguru import logger
 
-from dotenv import load_dotenv
-
-from fastapi import FastAPI, status, Query
-from fastapi.responses import JSONResponse
-from fastapi.encoders import jsonable_encoder
-
 from whatsonfip import radio_france_api
-from whatsonfip.models import Track, Station, APIStatus, Message
-from whatsonfip.unofficial_api import get_now_unofficial
-from whatsonfip.spotify_api import add_spotify_external_url
+from whatsonfip.models import APIStatus, Message, Station, Track
 from whatsonfip.radio_meuh_api import get_current_song as get_current_meuh
+from whatsonfip.spotify_api import add_spotify_external_url
+from whatsonfip.unofficial_api import get_now_unofficial
 
 load_dotenv()
 

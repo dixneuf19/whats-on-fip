@@ -1,16 +1,16 @@
-from typing import Dict, Any
+from typing import Any, Dict
 from unittest.mock import Mock
 
 import pytest
 from requests import Response
 
-from whatsonfip.spotify_api import (
-    search_on_spotify,
-    get_spotify_track,
-    add_spotify_external_url,
-    SpotifyTrackNotFound,
-)
 from whatsonfip.models import Track
+from whatsonfip.spotify_api import (
+    SpotifyTrackNotFound,
+    add_spotify_external_url,
+    get_spotify_track,
+    search_on_spotify,
+)
 
 simple_queries_responses = {
     "logical song supertramp": {
