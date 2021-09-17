@@ -43,19 +43,19 @@ def convert_to_track(track_dict: Dict[str, Any]) -> Track:
 
 def execute_grid_query(start: int, end: int, station: str = "FIP") -> List[Track]:
     logger.info(f"Querying the GraphQL API for {station} from {start} to {end}")
-    query = f"""{{ 
-            grid(start: {start}, end: {end}, station: {station}) {{ 
-            ... on TrackStep {{ 
-                track {{ 
-                    title 
-                    albumTitle 
-                    mainArtists 
+    query = f"""{{
+            grid(start: {start}, end: {end}, station: {station}) {{
+            ... on TrackStep {{
+                track {{
+                    title
+                    albumTitle
+                    mainArtists
                     productionDate
                     label
                     }}
-                }} 
-            }} 
-        }} 
+                }}
+            }}
+        }}
     """
     res = requests.post(RADIO_FRANCE_API_URL, json={"query": query})
     res.raise_for_status()
