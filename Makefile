@@ -25,7 +25,7 @@ check-format:
 	black --check .
 
 test:
-	PYTHONPATH=. pytest tests
+	PYTHONPATH=. pytest --cov=whatsonfip tests
 
 build:
 	docker build -t $(DOCKER_IMAGE_PATH) .
