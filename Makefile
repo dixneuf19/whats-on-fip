@@ -1,5 +1,6 @@
 .PHONY: install install-dev dev build run push release release-multi deploy
 
+PACKAGE_NAME=whatsonfip
 DOCKER_REPOSITERY=dixneuf19
 IMAGE_NAME=whatsonfip
 IMAGE_TAG=$(shell git rev-parse --short HEAD)
@@ -14,7 +15,7 @@ install-dev: install
 	pip install -r requirements-dev.txt
 
 dev:
-	uvicorn whatsonfip.main:app --reload
+	uvicorn ${PACKAGE_NAME}.main:app --reload
 
 format:
 	isort .
@@ -25,7 +26,7 @@ check-format:
 	black --check .
 
 test:
-	PYTHONPATH=. pytest --cov=whatsonfip tests
+	PYTHONPATH=. pytest --cov=${PACKAGE_NAME} --cov-report=xml tests
 
 build:
 	docker build -t $(DOCKER_IMAGE_PATH) .
