@@ -1,0 +1,4 @@
+# Not in pyproject.toml since flake8 won't support it
+# https://github.com/PyCQA/flake8/issues/234
+[flake8]
+max-line-length = 88
