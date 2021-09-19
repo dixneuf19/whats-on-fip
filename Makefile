@@ -24,6 +24,7 @@ format:
 check-format:
 	isort --profile black --check .
 	black --check .
+	flake8 .
 
 test:
 	PYTHONPATH=. pytest --cov=${PACKAGE_NAME} --cov-report=xml tests

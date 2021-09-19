@@ -68,7 +68,9 @@ def test_get_spotify_track(mocker):
 
     # Exact match title + supertramp
     input_track = Track(
-        title="logical song", album="Breakfeast in America", artist="supertramp"
+        title="logical song",
+        album="Breakfeast in America",
+        artist="supertramp",
     )
     assert get_spotify_track(input_track) == output_track
 
@@ -84,7 +86,11 @@ def test_get_spotify_track(mocker):
 def test_get_spotify_track_unknown(mocker):
     mocker.patch("requests.get", new=mock_get_request_on_spotify_api)
     input_track = Track(
-        title="This", album="song", artist="does", musical_kind="not", label="exist"
+        title="This",
+        album="song",
+        artist="does",
+        musical_kind="not",
+        label="exist",
     )
     with pytest.raises(SpotifyTrackNotFound):
         get_spotify_track(input_track)
@@ -112,7 +118,11 @@ def test_add_spotify_external_url(mocker):
 def test_add_spotify_external_url_unknow(mocker):
     mocker.patch("requests.get", new=mock_get_request_on_spotify_api)
     input_track = Track(
-        title="This", album="song", artist="does", musical_kind="not", label="exist"
+        title="This",
+        album="song",
+        artist="does",
+        musical_kind="not",
+        label="exist",
     )
 
     assert add_spotify_external_url(input_track) == input_track
