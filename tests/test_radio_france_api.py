@@ -1,9 +1,8 @@
 from unittest.mock import ANY
 
-import pytest
 from fastapi.encoders import jsonable_encoder
 
-from whatsonfip.models import Station, Track
+from whatsonfip.models import Track
 from whatsonfip.radio_france_api import (
     LiveUnavailableException,
     execute_grid_query,
@@ -276,7 +275,7 @@ def test_execute_grid_query():
 def test_execute_live_query():
     try:
         response = execute_live_query("FIP")
-    except LiveUnavailableException as e:
+    except LiveUnavailableException:
         return
     assert Track(**response.dict())
 

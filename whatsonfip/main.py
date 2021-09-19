@@ -2,7 +2,7 @@ import os
 from typing import List
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, Query, status
+from fastapi import FastAPI, Query
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from loguru import logger
@@ -15,7 +15,11 @@ from whatsonfip.unofficial_api import get_now_unofficial
 
 load_dotenv()
 
-USE_UNOFFICIAL_API = os.getenv("USE_UNOFFICIAL_API", "true") in ("True", "true", "1")
+USE_UNOFFICIAL_API = os.getenv("USE_UNOFFICIAL_API", "true") in (
+    "True",
+    "true",
+    "1",
+)
 
 
 app = FastAPI(
@@ -63,7 +67,10 @@ async def get_live(
             return JSONResponse(
                 content=jsonable_encoder(
                     {
-                        "message": f"No information available about the current track at {station}"
+                        "message": (
+                            "No information available about the "
+                            f"current track at {station}"
+                        )
                     }
                 ),
                 status_code=219,

@@ -36,7 +36,10 @@ def get_spotify_track(input_track: Track) -> Track:
         spotifyTrack = search_on_spotify(query)
     except SpotifyTrackNotFound:
         # Try with a shorted query
-        query = f"{' '.join(input_track.title.split()[:2])} {' '.join(input_track.artist.split()[:2])}"
+        query = (
+            f"{' '.join(input_track.title.split()[:2])} "
+            f"{' '.join(input_track.artist.split()[:2])}"
+        )
         spotifyTrack = search_on_spotify(query)
     return spotifyTrack
 

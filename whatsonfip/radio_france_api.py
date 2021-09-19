@@ -4,7 +4,6 @@ from typing import Any, Dict, List
 import requests
 from dotenv import load_dotenv
 from loguru import logger
-from requests.models import HTTPError
 
 from whatsonfip.models import Station, Track
 
@@ -36,7 +35,7 @@ def convert_to_track(track_dict: Dict[str, Any]) -> Track:
         pass
     doc["artist"] = artist
     doc["year"] = doc["productionDate"]
-    doc["album"] = album = doc["albumTitle"]
+    doc["album"] = doc["albumTitle"]
 
     return Track(**doc)
 
@@ -85,13 +84,16 @@ def execute_live_query(station: str = "FIP") -> Track:
     data = res.json()["data"]
     if data["live"]["song"] is None:
         raise LiveUnavailableException(
-            f"invalid result for live {station} query. Status code '{res.status_code}' - {data}"
+            (
+                f"invalid result for live {station} query. "
+                f"Status code '{res.status_code}' - {data}"
+            )
         )
     return convert_to_track(data["live"]["song"])
 
 
 def execute_stations_enum_query() -> List[Station]:
-    logger.info(f"Querying the GraphQL API for all Radio France stations")
+    logger.info("Querying the GraphQL API for all Radio France stations")
     query = '{__type(name: "StationsEnum") {enumValues {name}}}'
     res = requests.post(RADIO_FRANCE_API_URL, json={"query": query})
     res.raise_for_status()
@@ -100,6 +102,6 @@ def execute_stations_enum_query() -> List[Station]:
 
 
 def get_api_status() -> int:
-    logger.info(f"Fetching api status")
+    logger.info("Fetching api status")
     res = requests.get(url=RADIO_FRANCE_API_HEALTHCHECK, params={"x-token": API_TOKEN})
     return res.status_code
