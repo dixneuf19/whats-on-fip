@@ -1,4 +1,7 @@
 # Not in pyproject.toml since flake8 won't support it
 # https://github.com/PyCQA/flake8/issues/234
+# Config from black website
+# https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#line-length
 [flake8]
 max-line-length = 88
+extend-ignore = E203
