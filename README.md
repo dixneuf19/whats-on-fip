@@ -1,7 +1,6 @@
 # What's on FIP ?
 
-[![TestS](https://github.com/dixneuf19/whatsOnFIP/actions/workflows/test.yaml/badge.svg)](https://github.com/dixneuf19/whatsOnFIP/actions/workflows/test.yaml) [![CD](https://github.com/dixneuf19/whatsOnFIP/actions/workflows/build-and-release.yaml/badge.svg)](https://github.com/dixneuf19/whatsOnFIP/actions/workflows/build-and-release.yaml) [![CodeQL](https://github.com/dixneuf19/whatsOnFIP/actions/workflows/codeql-analysis.yml/badge.svg?branch=master)](https://github.com/dixneuf19/whatsOnFIP/actions/workflows/codeql-analysis.yml)
-
+[![TestS](https://github.com/dixneuf19/whatsOnFIP/actions/workflows/test.yaml/badge.svg)](https://github.com/dixneuf19/whatsOnFIP/actions/workflows/test.yaml) [![CD](https://github.com/dixneuf19/whatsOnFIP/actions/workflows/build-and-release.yaml/badge.svg)](https://github.com/dixneuf19/whatsOnFIP/actions/workflows/build-and-release.yaml)
 ## Local development
 
 You can build the *Docker* image with `make build` and then run it with `make run`.
