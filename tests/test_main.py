@@ -13,6 +13,15 @@ def test_get_live():
         assert Track(**response.json())
 
 
+def test_get_grid():
+    response = client.get(
+        "/grid", params={"start": 1589972400, "end": 1589976000, "station": "FIP"}
+    )
+    assert response.status_code == 200
+    if response.status_code == 200:
+        assert [Track(**t) for t in response.json()]
+
+
 def test_get_stations():
     response = client.get("/stations")
     assert response.status_code == 200
