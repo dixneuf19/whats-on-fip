@@ -3,6 +3,7 @@ from fastapi.testclient import TestClient
 from tests.test_spotify_api import simple_queries_responses
 from whatsonfip.main import app
 from whatsonfip.models import Station, Track
+from whatsonfip.radio_france_api import LiveUnavailableException
 
 client = TestClient(app)
 
@@ -28,9 +29,15 @@ def test_get_live_mocked(mocker):
         return_value=simple_queries_responses["logical song supertramp"],
     )
     response = client.get("/live")
-    assert response.status_code in (200, 219)
-    if response.status_code == 200:
-        assert Track(**response.json())
+    assert response.status_code == 200
+    assert Track(**response.json())
+
+    mocker.patch(
+        "whatsonfip.main.radio_france_api.execute_live_query",
+        side_effect=LiveUnavailableException(),
+    )
+    response = client.get("/live")
+    assert response.status_code == 219
 
 
 def test_get_grid():
