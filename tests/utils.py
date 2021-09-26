@@ -13,3 +13,18 @@ def generate_requests_get_mock(json_response: Any, status_code: Optional[int] = 
         return resp
 
     return requests_get_mock
+
+
+def generate_requests_post_mock(json_response: Any, status_code: Optional[int] = 200):
+    def requests_get_mock(
+        url: str,
+        json: Optional[Dict[str, Any]] = {},
+        payload: Optional[Dict[str, Any]] = {},
+    ) -> Response:
+        _ = url, json, payload
+        resp = Mock(spec=Response)
+        resp.status_code = status_code
+        resp.json.return_value = json_response
+        return resp
+
+    return requests_get_mock
