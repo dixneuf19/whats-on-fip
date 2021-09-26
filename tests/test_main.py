@@ -1,16 +1,52 @@
 from fastapi.testclient import TestClient
 
+from tests.test_spotify_api import simple_queries_responses
 from whatsonfip.main import app
 from whatsonfip.models import Station, Track
+from whatsonfip.radio_france_api import LiveUnavailableException
 
 client = TestClient(app)
 
 
-def test_get_live():
+def test_get_live(mocker):
+    mocker.patch(
+        "whatsonfip.spotify_api.get_spotify_track",
+        return_value=simple_queries_responses["logical song supertramp"],
+    )
     response = client.get("/live")
     assert response.status_code in (200, 219)
     if response.status_code == 200:
         assert Track(**response.json())
+
+
+def test_get_live_mocked(mocker):
+    # Test with Unofficial API KO
+    mocker.patch(
+        "whatsonfip.main.get_now_unofficial", return_value=None, side_effect=Exception()
+    )
+    mocker.patch(
+        "whatsonfip.spotify_api.get_spotify_track",
+        return_value=simple_queries_responses["logical song supertramp"],
+    )
+    response = client.get("/live")
+    assert response.status_code == 200
+    assert Track(**response.json())
+
+    mocker.patch(
+        "whatsonfip.main.radio_france_api.execute_live_query",
+        side_effect=LiveUnavailableException(),
+    )
+    response = client.get("/live")
+    assert response.status_code == 219
+
+
+def test_get_grid():
+    response = client.get(
+        "/grid", params={"start": 1589972400, "end": 1589976000, "station": "FIP"}
+    )
+    assert response.status_code == 200
+    if response.status_code == 200:
+        assert [Track(**t) for t in response.json()]
 
 
 def test_get_stations():
@@ -30,7 +66,11 @@ def test_get_api_status():
     assert response.json()["code"] in (200, 500)
 
 
-def test_get_live_meuh():
+def test_get_live_meuh(mocker):
+    mocker.patch(
+        "whatsonfip.spotify_api.get_spotify_track",
+        return_value=simple_queries_responses["logical song supertramp"],
+    )
     response = client.get("/meuh")
     assert response.status_code == 200
     assert Track(**response.json())

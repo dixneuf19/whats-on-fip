@@ -1,7 +1,9 @@
 from unittest.mock import ANY
 
+import pytest
 from fastapi.encoders import jsonable_encoder
 
+from tests.utils import generate_requests_post_mock
 from whatsonfip.models import Track
 from whatsonfip.radio_france_api import (
     LiveUnavailableException,
@@ -278,6 +280,15 @@ def test_execute_live_query():
     except LiveUnavailableException:
         return
     assert Track(**response.dict())
+
+
+def test_execute_live_query_with_exception(mocker):
+    mocker.patch(
+        "requests.post",
+        new=generate_requests_post_mock({"data": {"live": {"song": None}}}, 200),
+    )
+    with pytest.raises(LiveUnavailableException):
+        execute_live_query("FIP")
 
 
 def test_execute_stations_enum_query():

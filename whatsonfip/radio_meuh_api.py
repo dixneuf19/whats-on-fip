@@ -2,7 +2,6 @@ import os
 
 import requests
 from dotenv import load_dotenv
-from loguru import logger
 
 from whatsonfip.models import Track
 
@@ -16,16 +15,12 @@ RADIO_MEUH_API_URL = os.getenv(
 def get_current_song() -> Track:
     r = requests.get(url=RADIO_MEUH_API_URL)
     song = r.json()[0]
-    logger.debug(song)
 
-    song["title"] = song["titre"]
-    # song["album"] = song["album"]
-    # song["artist"] = song["artist"]
-
-    song["external_urls"] = {}
-    if song["url"] != "":
-        song["external_urls"]["spotify"] = song["url"]
-
-    song["cover_url"] = song["imgSrc"]
+    song = {
+        **song,
+        "title": song["titre"],
+        "external_urls": {"spotify": song["url"]} if song["url"] != "" else {},
+        "cover_url": song["imgSrc"],
+    }
 
     return Track(**song)

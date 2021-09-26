@@ -26,18 +26,18 @@ class LiveUnavailableException(Exception):
     pass
 
 
-def convert_to_track(track_dict: Dict[str, Any]) -> Track:
-    doc = track_dict["track"]
-    artist = ""
-    try:
-        artist = doc["mainArtists"][0]
-    except IndexError:
-        pass
-    doc["artist"] = artist
-    doc["year"] = doc["productionDate"]
-    doc["album"] = doc["albumTitle"]
-
-    return Track(**doc)
+def convert_to_track(data: Dict[str, Any]) -> Track:
+    track = data["track"]
+    return Track(
+        **{
+            **track,
+            "artist": track["mainArtists"][0]
+            if "mainArtists" in track.keys() and len(track["mainArtists"]) > 0
+            else "",
+            "year": track["productionDate"],
+            "album": track["albumTitle"],
+        }
+    )
 
 
 def execute_grid_query(start: int, end: int, station: str = "FIP") -> List[Track]:

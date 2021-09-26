@@ -1,9 +1,9 @@
-from typing import Any, Dict
-from unittest.mock import Mock
+from typing import Any, Callable, Dict
 
 import pytest
 from requests import Response
 
+from tests.utils import generate_requests_get_mock
 from whatsonfip.models import Track
 from whatsonfip.spotify_api import (
     SpotifyTrackNotFound,
@@ -34,35 +34,45 @@ simple_queries_responses = {
 }
 
 
-def mock_get_request_on_spotify_api(
-    service_address: str, params: Dict[str, Any]
-) -> Response:
-    _ = service_address  # do not use the address
-    query = params["q"]
-    resp = Mock(spec=Response)
-    if query in simple_queries_responses:
-        resp.status_code = 200
-        resp.json.return_value = simple_queries_responses[query]
-        return resp
-    else:
-        resp.status_code = 404
-        return resp
+def generate_requests_get_mock_spotify_api(
+    resp_by_queries: Dict[str, Dict[str, Any]]
+) -> Callable[[str, Dict[str, Any]], Response]:
+    def request_get_spotify_api(url: str, params: Dict[str, Any]) -> Response:
+        query = params["q"]
+        if query in simple_queries_responses:
+            request_get_func = generate_requests_get_mock(
+                simple_queries_responses[query], 200
+            )
+        else:
+            request_get_func = generate_requests_get_mock({}, 404)
+        return request_get_func(url, params)
+
+    return request_get_spotify_api
 
 
 def test_search_on_spotify(mocker):
-    mocker.patch("requests.get", new=mock_get_request_on_spotify_api)
+    mocker.patch(
+        "requests.get",
+        new=generate_requests_get_mock_spotify_api(simple_queries_responses),
+    )
     for query in simple_queries_responses.keys():
         assert search_on_spotify(query) == Track(**simple_queries_responses[query])
 
 
 def test_search_on_spotify_unknow_track(mocker):
-    mocker.patch("requests.get", new=mock_get_request_on_spotify_api)
+    mocker.patch(
+        "requests.get",
+        new=generate_requests_get_mock_spotify_api(simple_queries_responses),
+    )
     with pytest.raises(SpotifyTrackNotFound):
         search_on_spotify("not this song on spotify for sure")
 
 
 def test_get_spotify_track(mocker):
-    mocker.patch("requests.get", new=mock_get_request_on_spotify_api)
+    mocker.patch(
+        "requests.get",
+        new=generate_requests_get_mock_spotify_api(simple_queries_responses),
+    )
 
     output_track = Track(**simple_queries_responses["logical song supertramp"])
 
@@ -84,7 +94,10 @@ def test_get_spotify_track(mocker):
 
 
 def test_get_spotify_track_unknown(mocker):
-    mocker.patch("requests.get", new=mock_get_request_on_spotify_api)
+    mocker.patch(
+        "requests.get",
+        new=generate_requests_get_mock_spotify_api(simple_queries_responses),
+    )
     input_track = Track(
         title="This",
         album="song",
@@ -97,7 +110,10 @@ def test_get_spotify_track_unknown(mocker):
 
 
 def test_add_spotify_external_url(mocker):
-    mocker.patch("requests.get", new=mock_get_request_on_spotify_api)
+    mocker.patch(
+        "requests.get",
+        new=generate_requests_get_mock_spotify_api(simple_queries_responses),
+    )
     input_track_dict = {
         "title": "logical song",
         "album": "Breakfeast in America",
@@ -116,7 +132,10 @@ def test_add_spotify_external_url(mocker):
 
 
 def test_add_spotify_external_url_unknow(mocker):
-    mocker.patch("requests.get", new=mock_get_request_on_spotify_api)
+    mocker.patch(
+        "requests.get",
+        new=generate_requests_get_mock_spotify_api(simple_queries_responses),
+    )
     input_track = Track(
         title="This",
         album="song",
@@ -129,7 +148,10 @@ def test_add_spotify_external_url_unknow(mocker):
 
 
 def test_add_spotify_external_url_already_existing(mocker):
-    mocker.patch("requests.get", new=mock_get_request_on_spotify_api)
+    mocker.patch(
+        "requests.get",
+        new=generate_requests_get_mock_spotify_api(simple_queries_responses),
+    )
     input_track = Track(
         title="logical song",
         album="Breakfeast in America",
