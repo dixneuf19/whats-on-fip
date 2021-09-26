@@ -13,6 +13,15 @@ def test_get_live():
         assert Track(**response.json())
 
 
+def test_get_live_mocked(mocker):
+    # Test with Unofficial API KO
+    mocker.patch("whatsonfip.main.get_now_unofficial", side_effect=Exception())
+    response = client.get("/live")
+    assert response.status_code in (200, 219)
+    if response.status_code == 200:
+        assert Track(**response.json())
+
+
 def test_get_grid():
     response = client.get(
         "/grid", params={"start": 1589972400, "end": 1589976000, "station": "FIP"}
