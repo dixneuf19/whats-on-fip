@@ -1,8 +1,6 @@
-from unittest.mock import Mock
-
 import pytest
-from requests import Response
 
+from tests.utils import generate_requests_get_mock
 from whatsonfip.models import Track
 from whatsonfip.radio_meuh_api import get_current_song
 
@@ -39,20 +37,14 @@ EXPECTED_TRACK_OBJECT = Track(
 )
 
 
-def mock_get_sample_radio_meuh(url: str) -> Response:
-    _ = url
-    resp = Mock(spec=Response)
-    resp.status_code = 200
-    resp.json.return_value = EXAMPLE_MEUH_API_RESPONSE
-    return resp
-
-
 @pytest.mark.asyncio
 async def test_get_current_song_remote():
     assert Track(**get_current_song().dict())
 
 
 def test_get_current_song_mocked(mocker):
-    mocker.patch("requests.get", new=mock_get_sample_radio_meuh)
+    mocker.patch(
+        "requests.get", new=generate_requests_get_mock(EXAMPLE_MEUH_API_RESPONSE)
+    )
     track = get_current_song()
     assert track == EXPECTED_TRACK_OBJECT
