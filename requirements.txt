@@ -3,3 +3,4 @@ uvicorn==0.15.0
 python-dotenv==0.19.1
 loguru==0.5.3
 requests==2.26.0
+opentelemetry-instrumentation-fastapi==0.25b2
