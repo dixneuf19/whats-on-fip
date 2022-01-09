@@ -1,8 +1,8 @@
 import pytest
 
 from tests.utils import generate_requests_get_mock
-from whatsonfip.models import Track
-from whatsonfip.radio_meuh_api import get_current_song
+from whats_on_fip.models import Track
+from whats_on_fip.radio_meuh_api import get_current_song
 
 EXAMPLE_MEUH_API_RESPONSE = [
     {

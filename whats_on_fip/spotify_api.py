@@ -4,7 +4,7 @@ import requests
 from dotenv import load_dotenv
 from loguru import logger
 
-from whatsonfip.models import Track
+from whats_on_fip.models import Track
 
 load_dotenv()
 

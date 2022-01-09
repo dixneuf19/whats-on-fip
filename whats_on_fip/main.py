@@ -7,11 +7,11 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from loguru import logger
 
-from whatsonfip import radio_france_api
-from whatsonfip.models import APIStatus, Message, Station, Track
-from whatsonfip.radio_meuh_api import get_current_song as get_current_meuh
-from whatsonfip.spotify_api import add_spotify_external_url
-from whatsonfip.unofficial_api import get_now_unofficial
+from whats_on_fip import radio_france_api
+from whats_on_fip.models import APIStatus, Message, Station, Track
+from whats_on_fip.radio_meuh_api import get_current_song as get_current_meuh
+from whats_on_fip.spotify_api import add_spotify_external_url
+from whats_on_fip.unofficial_api import get_now_unofficial
 
 load_dotenv()
 

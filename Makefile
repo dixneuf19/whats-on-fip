@@ -1,40 +1,39 @@
-.PHONY: install install-dev dev build run push release release-multi deploy
+.PHONY: shell install install-dev dev build run push release release-multi deploy
 
-PACKAGE_NAME=whatsonfip
+PACKAGE_NAME=whats_on_fip
 DOCKER_REPOSITERY=dixneuf19
-IMAGE_NAME=whatsonfip
+IMAGE_NAME=whats-on-fip
 IMAGE_TAG=$(shell git rev-parse --short HEAD)
 DOCKER_IMAGE_PATH=$(DOCKER_REPOSITERY)/$(IMAGE_NAME):$(IMAGE_TAG)
 APP_NAME=whats-on-fip
 KUBE_NAMESPACE=fip
 
+shell:
+	poetry shell
+
 install:
-	pip install -r requirements.txt
+	poetry install
 
-install-dev: install
-	pip install -r requirements-dev.txt
-
-dev:
+dev: shell
 	uvicorn ${PACKAGE_NAME}.main:app --reload
 
-format:
+format: shell
 	isort .
 	black .
 
-check-format:
-	isort --profile black --check .
+check-format: shell
+	isort --check .
 	black --check .
 	flake8 .
 
-test:
-	PYTHONPATH=. pytest --cov=${PACKAGE_NAME} --cov-report=xml tests
+test: shell
+	pytest --cov=${PACKAGE_NAME} --cov-report=xml tests
 
 build:
 	docker build -t $(DOCKER_IMAGE_PATH) .
 
 build-multi:
 	docker buildx build --platform linux/amd64,linux/arm64,linux/386,linux/arm/v7 -t $(DOCKER_IMAGE_PATH) .
-
 
 run: build
 	docker run -p 8000:80 --env-file=.env $(DOCKER_IMAGE_PATH)

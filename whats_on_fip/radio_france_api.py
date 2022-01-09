@@ -5,7 +5,7 @@ import requests
 from dotenv import load_dotenv
 from loguru import logger
 
-from whatsonfip.models import Station, Track
+from whats_on_fip.models import Station, Track
 
 load_dotenv()
 
