@@ -14,20 +14,20 @@ shell:
 install:
 	poetry install
 
-dev: shell
-	uvicorn ${PACKAGE_NAME}.main:app --reload
+dev:
+	poetry run uvicorn ${PACKAGE_NAME}.main:app --reload
 
-format: shell
-	isort .
-	black .
+format:
+	poetry run isort .
+	poetry run black .
 
-check-format: shell
-	isort --check .
-	black --check .
-	flake8 .
+check-format:
+	poetry run isort --check .
+	poetry run black --check .
+	poetry run flake8 .
 
-test: shell
-	pytest --cov=${PACKAGE_NAME} --cov-report=xml tests
+test:
+	poetry run pytest --cov=${PACKAGE_NAME} --cov-report=xml tests
 
 build:
 	docker build -t $(DOCKER_IMAGE_PATH) .
