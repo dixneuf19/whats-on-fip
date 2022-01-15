@@ -4,8 +4,8 @@ import pytest
 from fastapi.encoders import jsonable_encoder
 
 from tests.utils import generate_requests_post_mock
-from whatsonfip.models import Track
-from whatsonfip.radio_france_api import (
+from whats_on_fip.models import Track
+from whats_on_fip.radio_france_api import (
     LiveUnavailableException,
     execute_grid_query,
     execute_live_query,

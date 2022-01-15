@@ -3,7 +3,7 @@ import os
 import requests
 from dotenv import load_dotenv
 
-from whatsonfip.models import Track
+from whats_on_fip.models import Track
 
 load_dotenv()
 

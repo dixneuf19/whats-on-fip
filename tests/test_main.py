@@ -2,16 +2,16 @@ import pytest
 from fastapi.testclient import TestClient
 
 from tests.test_spotify_api import simple_queries_responses
-from whatsonfip.main import app
-from whatsonfip.models import Station, Track
-from whatsonfip.radio_france_api import LiveUnavailableException
+from whats_on_fip.main import app
+from whats_on_fip.models import Station, Track
+from whats_on_fip.radio_france_api import LiveUnavailableException
 
 client = TestClient(app)
 
 
 def test_get_live(mocker):
     mocker.patch(
-        "whatsonfip.spotify_api.get_spotify_track",
+        "whats_on_fip.spotify_api.get_spotify_track",
         return_value=simple_queries_responses["logical song supertramp"],
     )
     response = client.get("/live")
@@ -24,10 +24,12 @@ def test_get_live(mocker):
 def test_get_live_mocked(mocker):
     # Test with Unofficial API KO
     mocker.patch(
-        "whatsonfip.main.get_now_unofficial", return_value=None, side_effect=Exception()
+        "whats_on_fip.main.get_now_unofficial",
+        return_value=None,
+        side_effect=Exception(),
     )
     mocker.patch(
-        "whatsonfip.spotify_api.get_spotify_track",
+        "whats_on_fip.spotify_api.get_spotify_track",
         return_value=simple_queries_responses["logical song supertramp"],
     )
     response = client.get("/live")
@@ -35,7 +37,7 @@ def test_get_live_mocked(mocker):
     assert Track(**response.json())
 
     mocker.patch(
-        "whatsonfip.main.radio_france_api.execute_live_query",
+        "whats_on_fip.main.radio_france_api.execute_live_query",
         side_effect=LiveUnavailableException(),
     )
     response = client.get("/live")
@@ -73,7 +75,7 @@ def test_get_api_status():
 
 def test_get_live_meuh(mocker):
     mocker.patch(
-        "whatsonfip.spotify_api.get_spotify_track",
+        "whats_on_fip.spotify_api.get_spotify_track",
         return_value=simple_queries_responses["logical song supertramp"],
     )
     response = client.get("/meuh")

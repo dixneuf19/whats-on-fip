@@ -4,8 +4,8 @@ import pytest
 from requests import Response
 
 from tests.utils import generate_requests_get_mock
-from whatsonfip.models import Track
-from whatsonfip.spotify_api import (
+from whats_on_fip.models import Track
+from whats_on_fip.spotify_api import (
     SpotifyTrackNotFound,
     add_spotify_external_url,
     get_spotify_track,
