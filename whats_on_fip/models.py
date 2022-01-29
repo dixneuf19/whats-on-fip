@@ -13,6 +13,9 @@ class Track(BaseModel):
     external_urls: Dict[str, str] = {}
     cover_url: Optional[str]
 
+    def __str__(self) -> str:
+        return self.title + f" ({self.year})" if self.year else "" + f" - {self.artist}"
+
 
 class Station(BaseModel):
     name: str

@@ -78,9 +78,7 @@ async def get_live(
 
     # Add spotify external_url if necessary
     try:
-        if not ("spotify" in track.external_urls):
-            logger.info("Looking for the track on spotify")
-            track = add_spotify_external_url(track)
+        track = add_spotify_external_url(track)
     except Exception as e:
         logger.warning("Error while using spotify API: " + str(e))
 
@@ -112,9 +110,7 @@ async def get_live_meuh() -> Track:
     track = get_current_meuh()
     # Add spotify external_url if necessary
     try:
-        if not ("spotify" in track.external_urls):
-            logger.info("Looking for the track on spotify")
-            track = add_spotify_external_url(track)
+        track = add_spotify_external_url(track)
     except Exception as e:
         logger.warning("Error while using spotify API: " + str(e))
 

@@ -8,6 +8,7 @@ from whats_on_fip.models import Track
 from whats_on_fip.spotify_api import (
     SpotifyTrackNotFound,
     add_spotify_external_url,
+    get_spotify_app_link,
     get_spotify_track,
     search_on_spotify,
 )
@@ -19,7 +20,8 @@ simple_queries_responses = {
         "artist": "Supertramp",
         "title": "The Logical Song - Remastered 2010",
         "external_urls": {
-            "spotify": "https://open.spotify.com/track/6mHOcVtsHLMuesJkswc0GZ"
+            "spotify": "https://open.spotify.com/track/6mHOcVtsHLMuesJkswc0GZ",
+            "spotify_app": "spotify:track:6mHOcVtsHLMuesJkswc0GZ",
         },
     },
     'album:"logical song" year:1979': {
@@ -28,7 +30,8 @@ simple_queries_responses = {
         "artist": "Supertramp",
         "title": "The Logical Song",
         "external_urls": {
-            "spotify": "https://open.spotify.com/track/4se2fj5uRWlkcnfhtnRLrZ"
+            "spotify": "https://open.spotify.com/track/4se2fj5uRWlkcnfhtnRLrZ",
+            "spotify_app": "spotify:track:4se2fj5uRWlkcnfhtnRLrZ",
         },
     },
 }
@@ -109,6 +112,14 @@ def test_get_spotify_track_unknown(mocker):
         get_spotify_track(input_track)
 
 
+def test_get_spotify_app_link():
+    for t in simple_queries_responses.values():
+        if "spotify" in t["external_urls"]:
+            assert t["external_urls"]["spotify_app"] == get_spotify_app_link(
+                t["external_urls"]["spotify"]
+            )
+
+
 def test_add_spotify_external_url(mocker):
     mocker.patch(
         "requests.get",
@@ -156,12 +167,12 @@ def test_add_spotify_external_url_already_existing(mocker):
         title="logical song",
         album="Breakfeast in America",
         artist="supertramp",
-        external_urls={"spotify": "A random link already there"},
+        external_urls={"spotify": "https://open.spotify.com/track/random-valid-id"},
     )
 
     output_track = input_track.copy(deep=True)
-    output_track.external_urls = simple_queries_responses["logical song supertramp"][
-        "external_urls"
-    ]
+    output_track.external_urls["spotify_app"] = get_spotify_app_link(
+        input_track.external_urls["spotify"]
+    )
 
     assert add_spotify_external_url(input_track) == output_track
