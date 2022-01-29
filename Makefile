@@ -25,6 +25,7 @@ check-format:
 	poetry run isort --check .
 	poetry run black --check .
 	poetry run flake8 .
+	poetry run mypy .
 
 test:
 	poetry run pytest --cov=${PACKAGE_NAME} --cov-report=xml tests

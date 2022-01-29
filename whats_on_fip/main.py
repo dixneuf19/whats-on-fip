@@ -98,12 +98,12 @@ async def get_stations() -> List[Station]:
 
 
 @app.get("/health")
-async def get_health():
+async def get_health() -> dict[str, str]:
     return {"message": "OK"}
 
 
 @app.get("/api-status", response_model=APIStatus)
-async def get_api_status():
+async def get_api_status() -> dict[str, int]:
     return {"code": radio_france_api.get_api_status()}
 
 
