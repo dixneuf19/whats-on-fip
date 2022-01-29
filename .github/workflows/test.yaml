@@ -18,8 +18,8 @@ jobs:
         python-version: ${{ env.PYTHON_VERSION }}
     - name: Run image
       uses: abatilo/actions-poetry@v2.1.4
-    - name: Install dependencies
-      run: make install
+    - name: Install development dependencies
+      run: make install-dev
     - name: Check for correct formatting, static typing, linting, etc...
       run: |
         make check-format
