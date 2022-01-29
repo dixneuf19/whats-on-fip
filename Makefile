@@ -12,7 +12,11 @@ shell:
 	poetry shell
 
 install:
+	poetry install --no-dev
+
+install-dev:
 	poetry install
+	poetry run pre-commit install
 
 dev:
 	poetry run uvicorn ${PACKAGE_NAME}.main:app --reload
