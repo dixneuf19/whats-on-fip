@@ -29,3 +29,8 @@ build-backend = "poetry.core.masonry.api"
 # https://www.python.org/dev/peps/pep-0518/
 [tool.isort]
 profile = "black"
+
+# Fix deprecation warning
+# https://github.com/pytest-dev/pytest-asyncio/blob/d8efa640f0aa1ba8856b908ba486150588018209/pytest_asyncio/plugin.py#L61
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
