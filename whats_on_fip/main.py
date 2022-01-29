@@ -1,5 +1,5 @@
 import os
-from typing import List
+from typing import List, Union
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, Query
@@ -46,7 +46,7 @@ async def get_live(
         title="Station Name",
         description="Short name of the Radio France station",
     )
-) -> Track:
+) -> Union[Track, JSONResponse]:
 
     track = None
 
@@ -98,12 +98,12 @@ async def get_stations() -> List[Station]:
 
 
 @app.get("/health")
-async def get_health():
+async def get_health() -> dict[str, str]:
     return {"message": "OK"}
 
 
 @app.get("/api-status", response_model=APIStatus)
-async def get_api_status():
+async def get_api_status() -> dict[str, int]:
     return {"code": radio_france_api.get_api_status()}
 
 

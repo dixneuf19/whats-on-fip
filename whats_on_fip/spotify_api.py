@@ -21,7 +21,7 @@ class SpotifyTrackNotFound(Exception):
 def search_on_spotify(query: str) -> Track:
     logger.info(f"search for '{query}' on Spotify API")
     service_address = f"http://{SPOTIFY_API_HOST}:{SPOTIFY_API_PORT}/search"
-    payload = {"q": query, "simple": True}  # Get a flat simple response
+    payload = {"q": query, "simple": str(True)}  # Get a flat simple response
     r = requests.get(service_address, params=payload)
     if r.status_code == requests.codes.not_found:
         logger.info(f"no track found on Spotify with query '{query}'")

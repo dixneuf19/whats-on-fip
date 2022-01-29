@@ -2,9 +2,6 @@ name: Test
 
 on: [push]
 
-env:
-  PYTHON_VERSION: "3.9"
-
 jobs:
   test:
 
@@ -12,7 +9,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python ${{ env.PYTHON_VERSION }}
+    - name: Read Python version
+      run: |
+        echo "PYTHON_VERSION=$(cat .python-version)" >> $GITHUB_ENV
+    - name: Set up Python
       uses: actions/setup-python@v2
       with:
         python-version: ${{ env.PYTHON_VERSION }}
@@ -20,7 +20,7 @@ jobs:
       uses: abatilo/actions-poetry@v2.1.4
     - name: Install dependencies
       run: make install
-    - name: Format with black
+    - name: Check for correct formatting, static typing, linting, etc...
       run: |
         make check-format
     - name: Test with pytest
