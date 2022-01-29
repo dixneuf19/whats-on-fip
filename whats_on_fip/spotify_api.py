@@ -44,17 +44,28 @@ def get_spotify_track(input_track: Track) -> Track:
     return spotifyTrack
 
 
-def add_spotify_external_url(input_track: Track) -> Track:
-    external_urls = input_track.external_urls
-    try:
-        spotifyTrack = get_spotify_track(input_track)
-        if "spotify" in spotifyTrack.external_urls:
-            logger.info("Adding a spotify url to track")
-            external_urls["spotify"] = spotifyTrack.external_urls["spotify"]
-    except SpotifyTrackNotFound:
-        # already logged previously
-        pass
+def get_spotify_app_link(spotify_url: str) -> str:
+    track_id = spotify_url.split("/")[-1]
+    return f"spotify:track:{track_id}"
 
+
+def add_spotify_external_url(input_track: Track) -> Track:
+    logger.info(f"Looking for track {input_track} on spotify")
     output_track = input_track.copy(deep=True)
-    output_track.external_urls = external_urls
+    if "spotify" not in output_track.external_urls:
+        try:
+            spotifyTrack = get_spotify_track(input_track)
+            if "spotify" in spotifyTrack.external_urls:
+                logger.info("Adding a spotify url to track")
+                output_track.external_urls["spotify"] = spotifyTrack.external_urls[
+                    "spotify"
+                ]
+        except SpotifyTrackNotFound:
+            logger.warning(f"no spotify URL found for track {input_track}")
+
+    if "spotify" in output_track.external_urls:
+        output_track.external_urls["spotify_app"] = get_spotify_app_link(
+            output_track.external_urls["spotify"]
+        )
+
     return output_track
