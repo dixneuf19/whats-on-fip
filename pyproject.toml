@@ -38,6 +38,8 @@ asyncio_mode = "auto"
 
 # https://mypy.readthedocs.io/en/stable/config_file.html#using-a-pyproject-toml-file
 [tool.mypy]
+plugins = "pydantic.mypy"
+
 follow_imports = "silent"
 strict_optional = true
 warn_redundant_casts = true
@@ -47,6 +49,12 @@ check_untyped_defs = true
 no_implicit_reexport = true
 disallow_untyped_defs = true
 ignore_missing_imports = true
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
+warn_untyped_fields = true
 
 [[tool.mypy.overrides]]
 module = "tests.*"
