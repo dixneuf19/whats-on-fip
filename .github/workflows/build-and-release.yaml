@@ -34,7 +34,7 @@ jobs:
             type=ref,event=tag
             type=ref,event=pr
             type=sha
-                  
+
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -55,7 +55,7 @@ jobs:
         with:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }} 
+          labels: ${{ steps.meta.outputs.labels }}
           platforms: ${{ env.TARGET_PLATFORMS }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
