@@ -9,7 +9,7 @@ python = "^3.9"
 fastapi = "^0.73.0"
 uvicorn = "^0.17.0"
 python-dotenv = "^0.19.2"
-loguru = "^0.5.3"
+loguru = "^0.6.0"
 requests = "^2.27.1"
 
 [tool.poetry.dev-dependencies]
