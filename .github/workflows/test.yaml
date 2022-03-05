@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Read Python version
       run: |
         echo "PYTHON_VERSION=$(cat .python-version)" >> $GITHUB_ENV
