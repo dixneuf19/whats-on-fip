@@ -9,6 +9,7 @@ from loguru import logger
 
 from whats_on_fip import radio_france_api
 from whats_on_fip.models import APIStatus, Message, Station, Track
+from whats_on_fip.radio_fiftyfifty import get_current_song as get_current_fiftyfifty
 from whats_on_fip.radio_meuh_api import get_current_song as get_current_meuh
 from whats_on_fip.spotify_api import add_spotify_external_url
 from whats_on_fip.unofficial_api import get_now_unofficial
@@ -108,6 +109,18 @@ async def get_api_status() -> dict[str, int]:
 @app.get("/meuh", response_model=Track)
 async def get_live_meuh() -> Track:
     track = get_current_meuh()
+    # Add spotify external_url if necessary
+    try:
+        track = add_spotify_external_url(track)
+    except Exception as e:
+        logger.warning("Error while using spotify API: " + str(e))
+
+    return track
+
+
+@app.get("/5050", response_model=Track)
+async def get_live_fiftyfifty() -> Track:
+    track = get_current_fiftyfifty()
     # Add spotify external_url if necessary
     try:
         track = add_spotify_external_url(track)
