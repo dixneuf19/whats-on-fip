@@ -1,7 +1,7 @@
 from typing import Any, Callable, Dict
 
 import pytest
-from requests import Response
+from requests import Response, get
 
 from tests.utils import generate_requests_get_mock
 from whats_on_fip.models import Track
@@ -10,6 +10,7 @@ from whats_on_fip.spotify_api import (
     add_spotify_external_url,
     get_spotify_app_link,
     get_spotify_track,
+    get_spotify_url,
     search_on_spotify,
 )
 
@@ -176,3 +177,9 @@ def test_add_spotify_external_url_already_existing(mocker):
     )
 
     assert add_spotify_external_url(input_track) == output_track
+
+
+def test_get_spotify_url():
+    arbitrary_spotify_id = "6mHOcVtsHLMuesJkswc0GZ"
+    res = get(get_spotify_url(arbitrary_spotify_id))
+    res.raise_for_status()

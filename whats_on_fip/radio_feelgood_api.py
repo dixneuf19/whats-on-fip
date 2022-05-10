@@ -1,0 +1,43 @@
+import os
+from time import time
+
+import requests
+
+from whats_on_fip.models import Track
+from whats_on_fip.spotify_api import get_spotify_url
+
+RADIO_FEELGOOD_URL = os.getenv(
+    "RADIO_FEELGOOD_URL", "https://www.radiofg.com/api/TitleDiffusions"
+)
+COMMON_PARAMS = {
+    "size": "1",  # Select only the last song
+    "radioStreamId": "2174546520932614607",
+}
+
+RADIO_FEELGOOD_COVER_URL = "https://images.lesindesradios.fr/fit-in/300x2000/filters:quality(100)/radios/radiofg/radiostream/5gWkrl9VKE/vignette_awN7JwWOid.jpeg"  # noqa:E501
+
+
+def get_current_song() -> Track:
+    # 1. Generate current timestamp + 000 (reverse-engineered)
+
+    current_ts = f"{int(time())}000"
+
+    # 2. Query API for this timestamp
+    res = requests.get(RADIO_FEELGOOD_URL, params={**COMMON_PARAMS, "date": current_ts})
+    res.raise_for_status()
+
+    song = res.json()[0]["title"]
+
+    # 3. Adapt for our format
+
+    external_urls = {}
+    if "spotifyId" in song and song["spotifyId"] is not None:
+        external_urls["spotify"] = get_spotify_url(song["spotifyId"])
+    song = {
+        **song,
+        "external_urls": external_urls,
+        # "cover_url"  # Hard to compute for now, serve generic radio FG Thumbnail
+        "cover_url": RADIO_FEELGOOD_COVER_URL,
+    }
+
+    return Track(**song)
