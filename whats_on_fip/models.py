@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 class Track(BaseModel):
     title: str
-    album: str
+    album: Optional[str]
     artist: str
     year: Optional[int]
     label: Optional[str]

@@ -49,6 +49,10 @@ def get_spotify_app_link(spotify_url: str) -> str:
     return f"spotify:track:{track_id}"
 
 
+def get_spotify_url(spotify_track_id: str) -> str:
+    return f"https://open.spotify.com/track/{spotify_track_id}"
+
+
 def add_spotify_external_url(input_track: Track) -> Track:
     logger.info(f"Looking for track {input_track} on spotify")
     output_track = input_track.copy(deep=True)

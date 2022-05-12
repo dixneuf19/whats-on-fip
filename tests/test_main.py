@@ -86,3 +86,13 @@ def test_get_live_fiftyfifty(mocker):
     response = client.get("/5050")
     assert response.status_code == 200
     assert Track(**response.json())
+
+
+def test_get_live_feelgood(mocker):
+    mocker.patch(
+        "whats_on_fip.spotify_api.get_spotify_track",
+        return_value=simple_queries_responses["logical song supertramp"],
+    )
+    response = client.get("/feelgood")
+    assert response.status_code == 200
+    assert Track(**response.json())
