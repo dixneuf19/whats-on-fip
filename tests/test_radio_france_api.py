@@ -269,6 +269,7 @@ FIP_songs_2020_05_20_11h_12h_UTC = [
 ]
 
 
+@pytest.mark.skip(reason="RadioFrance OpenAPI is unreliable")
 def test_execute_grid_query():
     response = execute_grid_query(1589972400, 1589976000, "FIP")
     assert jsonable_encoder(response) == FIP_songs_2020_05_20_11h_12h_UTC
