@@ -1,3 +1,4 @@
+import pytest
 from fastapi.testclient import TestClient
 
 from tests.test_spotify_api import simple_queries_responses
@@ -42,6 +43,7 @@ def test_get_live_mocked(mocker):
     assert response.status_code == 219
 
 
+@pytest.mark.skip(reason="RadioFrance OpenAPI is unreliable")
 def test_get_grid():
     response = client.get(
         "/grid", params={"start": 1589972400, "end": 1589976000, "station": "FIP"}
