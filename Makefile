@@ -12,7 +12,7 @@ shell:
 	poetry shell
 
 install:
-	poetry install --no-dev
+	poetry install --only main
 
 install-dev:
 	poetry install
