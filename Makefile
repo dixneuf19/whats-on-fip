@@ -8,6 +8,9 @@ DOCKER_IMAGE_PATH=$(DOCKER_REPOSITERY)/$(IMAGE_NAME):$(IMAGE_TAG)
 APP_NAME=whats-on-fip
 KUBE_NAMESPACE=fip
 
+# Default target
+all: dev
+
 shell:
 	poetry shell
 

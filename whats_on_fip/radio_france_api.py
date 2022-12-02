@@ -14,10 +14,6 @@ API_TOKEN = os.getenv("RADIO_FRANCE_API_TOKEN")
 RADIO_FRANCE_API_HOST = os.getenv(
     "RADIO_FRANCE_API_HOST", "https://openapi.radiofrance.fr/v1/graphql"
 )
-RADIO_FRANCE_API_HEALTHCHECK = os.getenv(
-    "RADIO_FRANCE_API_HEALTHCHECK",
-    "https://openapi.radiofrance.fr/v1/.well-known/apollo/server-health",
-)
 
 RADIO_FRANCE_API_URL = f"{RADIO_FRANCE_API_HOST}?x-token={API_TOKEN}"
 
@@ -103,5 +99,10 @@ def execute_stations_enum_query() -> List[Station]:
 
 def get_api_status() -> int:
     logger.info("Fetching api status")
-    res = requests.get(url=RADIO_FRANCE_API_HEALTHCHECK, params={"x-token": API_TOKEN})
+    res = requests.post(
+        url=RADIO_FRANCE_API_URL,
+        json={
+            "query": "{ __typename }",
+        },
+    )
     return res.status_code
