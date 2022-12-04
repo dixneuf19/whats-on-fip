@@ -1,12 +1,9 @@
 import os
 
 import requests
-from dotenv import load_dotenv
 from loguru import logger
 
 from whats_on_fip.models import Track
-
-load_dotenv()
 
 SPOTIFY_API_HOST = os.getenv("SPOTIFY_API_HOST", "spotify-api")
 SPOTIFY_API_PORT = os.getenv("SPOTIFY_API_PORT", "80")

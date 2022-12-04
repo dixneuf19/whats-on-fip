@@ -8,7 +8,6 @@ authors = ["Julen Dixneuf <julend@padok.fr>"]
 python = "^3.9"
 fastapi = "^0.88.0"
 uvicorn = "^0.20.0"
-python-dotenv = "^0.21.0"
 loguru = "^0.6.0"
 requests = "^2.27.1"
 python-engineio = "^4.3.2"

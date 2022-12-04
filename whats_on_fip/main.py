@@ -1,7 +1,6 @@
 import os
 from typing import List
 
-from dotenv import load_dotenv
 from fastapi import FastAPI, Query
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
@@ -9,13 +8,11 @@ from loguru import logger
 
 from whats_on_fip import radio_france_api
 from whats_on_fip.models import APIStatus, Message, Station, Track
-from whats_on_fip.radio_feelgood_api import get_current_song as get_current_feelgood
+from whats_on_fip.radio_feelgood_api import RadioFeelGood
 from whats_on_fip.radio_fiftyfifty import Radio5050
-from whats_on_fip.radio_meuh_api import get_current_song as get_current_meuh
+from whats_on_fip.radio_france_api import RadioFIP
+from whats_on_fip.radio_meuh_api import RadioMeuh
 from whats_on_fip.spotify_api import add_spotify_external_url
-from whats_on_fip.unofficial_api import get_now_unofficial
-
-load_dotenv()
 
 USE_UNOFFICIAL_API = os.getenv("USE_UNOFFICIAL_API", "true") in (
     "True",
@@ -54,9 +51,11 @@ async def get_live(
 
     # Use retro-engineered API if possible
     if station == "FIP" and USE_UNOFFICIAL_API:
+        radio = RadioFIP()
+
         try:
             logger.info("Use unofficial API to fetch current track")
-            track = get_now_unofficial()
+            track = radio.get_current_track()
         except Exception as e:
             logger.warning("Error while using unofficial API: " + str(e))
 
@@ -109,7 +108,8 @@ async def get_api_status() -> dict[str, int]:
 
 @app.get("/meuh", response_model=Track)
 async def get_live_meuh() -> Track:
-    track = get_current_meuh()
+    radio = RadioMeuh()
+    track = radio.get_current_track()
     # Add spotify external_url if necessary
     try:
         track = add_spotify_external_url(track)
@@ -134,7 +134,8 @@ async def get_live_fiftyfifty() -> Track:
 
 @app.get("/feelgood", response_model=Track)
 async def get_live_feelgood() -> Track:
-    track = get_current_feelgood()
+    radio = RadioFeelGood()
+    track = radio.get_current_track()
     # Add spotify external_url if necessary
     try:
         track = add_spotify_external_url(track)

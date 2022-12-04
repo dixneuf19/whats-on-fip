@@ -1,26 +1,26 @@
 import os
 
 import requests
-from dotenv import load_dotenv
 
 from whats_on_fip.models import Track
-
-load_dotenv()
-
-RADIO_MEUH_API_URL = os.getenv(
-    "RADIO_MEUH_API_URL", "https://www.radiomeuh.com/player/rtdata/tracks.json"
-)
+from whats_on_fip.radio import Radio
 
 
-def get_current_song() -> Track:
-    r = requests.get(url=RADIO_MEUH_API_URL)
-    song = r.json()[0]
+class RadioMeuh(Radio):
+    def __init__(self) -> None:
+        self.url = os.getenv(
+            "RADIO_MEUH_API_URL", "https://www.radiomeuh.com/player/rtdata/tracks.json"
+        )
 
-    song = {
-        **song,
-        "title": song["titre"],
-        "external_urls": {"spotify": song["url"]} if song["url"] != "" else {},
-        "cover_url": song["imgSrc"],
-    }
+    def get_current_track(self) -> Track:
+        r = requests.get(self.url)
+        song = r.json()[0]
 
-    return Track(**song)
+        song = {
+            **song,
+            "title": song["titre"],
+            "external_urls": {"spotify": song["url"]} if song["url"] != "" else {},
+            "cover_url": song["imgSrc"],
+        }
+
+        return Track(**song)

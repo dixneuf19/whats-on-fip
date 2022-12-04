@@ -2,7 +2,7 @@ import pytest
 
 from tests.utils import generate_requests_get_mock
 from whats_on_fip.models import Track
-from whats_on_fip.radio_feelgood_api import RADIO_FEELGOOD_COVER_URL, get_current_song
+from whats_on_fip.radio_feelgood_api import RadioFeelGood
 
 EXAMPLE_FEELGOOD_API_RESPONSE = [
     {
@@ -26,18 +26,18 @@ EXAMPLE_FEELGOOD_API_RESPONSE = [
 EXPECTED_TRACK_OBJECT = Track(
     title="SAM FELDT",
     artist="HAPPY HOUR DJ",
-    cover_url=RADIO_FEELGOOD_COVER_URL,
+    cover_url="https://images.lesindesradios.fr/fit-in/300x2000/filters:quality(100)/radios/radiofg/radiostream/5gWkrl9VKE/vignette_awN7JwWOid.jpeg",  # noqa:E501
 )
 
 
 @pytest.mark.asyncio
 async def test_get_current_song_remote():
-    assert Track(**get_current_song().dict())
+    assert Track(**RadioFeelGood().get_current_track().dict())
 
 
 def test_get_current_song_mocked(mocker):
     mocker.patch(
         "requests.get", new=generate_requests_get_mock(EXAMPLE_FEELGOOD_API_RESPONSE)
     )
-    track = get_current_song()
+    track = RadioFeelGood().get_current_track()
     assert track == EXPECTED_TRACK_OBJECT
