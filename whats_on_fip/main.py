@@ -1,7 +1,6 @@
 import os
 from typing import List
 
-from dotenv import load_dotenv
 from fastapi import FastAPI, Query
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
@@ -14,8 +13,6 @@ from whats_on_fip.radio_fiftyfifty import Radio5050
 from whats_on_fip.radio_france_api import RadioFIP
 from whats_on_fip.radio_meuh_api import RadioMeuh
 from whats_on_fip.spotify_api import add_spotify_external_url
-
-load_dotenv()
 
 USE_UNOFFICIAL_API = os.getenv("USE_UNOFFICIAL_API", "true") in (
     "True",

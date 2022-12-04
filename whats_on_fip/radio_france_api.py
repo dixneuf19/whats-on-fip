@@ -2,7 +2,6 @@ import os
 from typing import Any, Dict, List
 
 import requests
-from dotenv import load_dotenv
 from loguru import logger
 
 from whats_on_fip.models import Station, Track
