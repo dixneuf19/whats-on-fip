@@ -11,7 +11,7 @@ from whats_on_fip import radio_france_api
 from whats_on_fip.models import APIStatus, Message, Station, Track
 from whats_on_fip.radio_feelgood_api import RadioFeelGood
 from whats_on_fip.radio_fiftyfifty import Radio5050
-from whats_on_fip.radio_meuh_api import get_current_song as get_current_meuh
+from whats_on_fip.radio_meuh_api import RadioMeuh
 from whats_on_fip.spotify_api import add_spotify_external_url
 from whats_on_fip.unofficial_api import get_now_unofficial
 
@@ -109,7 +109,8 @@ async def get_api_status() -> dict[str, int]:
 
 @app.get("/meuh", response_model=Track)
 async def get_live_meuh() -> Track:
-    track = get_current_meuh()
+    radio = RadioMeuh()
+    track = radio.get_current_track()
     # Add spotify external_url if necessary
     try:
         track = add_spotify_external_url(track)

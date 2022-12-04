@@ -2,7 +2,7 @@ import pytest
 
 from tests.utils import generate_requests_get_mock
 from whats_on_fip.models import Track
-from whats_on_fip.radio_meuh_api import get_current_song
+from whats_on_fip.radio_meuh_api import RadioMeuh
 
 EXAMPLE_MEUH_API_RESPONSE = [
     {
@@ -39,12 +39,12 @@ EXPECTED_TRACK_OBJECT = Track(
 
 @pytest.mark.asyncio
 async def test_get_current_song_remote():
-    assert Track(**get_current_song().dict())
+    assert Track(**RadioMeuh().get_current_track().dict())
 
 
 def test_get_current_song_mocked(mocker):
     mocker.patch(
         "requests.get", new=generate_requests_get_mock(EXAMPLE_MEUH_API_RESPONSE)
     )
-    track = get_current_song()
+    track = RadioMeuh().get_current_track()
     assert track == EXPECTED_TRACK_OBJECT
