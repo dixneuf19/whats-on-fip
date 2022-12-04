@@ -11,9 +11,9 @@ from whats_on_fip import radio_france_api
 from whats_on_fip.models import APIStatus, Message, Station, Track
 from whats_on_fip.radio_feelgood_api import RadioFeelGood
 from whats_on_fip.radio_fiftyfifty import Radio5050
+from whats_on_fip.radio_france_api import RadioFIP
 from whats_on_fip.radio_meuh_api import RadioMeuh
 from whats_on_fip.spotify_api import add_spotify_external_url
-from whats_on_fip.unofficial_api import get_now_unofficial
 
 load_dotenv()
 
@@ -54,9 +54,11 @@ async def get_live(
 
     # Use retro-engineered API if possible
     if station == "FIP" and USE_UNOFFICIAL_API:
+        radio = RadioFIP()
+
         try:
             logger.info("Use unofficial API to fetch current track")
-            track = get_now_unofficial()
+            track = radio.get_current_track()
         except Exception as e:
             logger.warning("Error while using unofficial API: " + str(e))
 

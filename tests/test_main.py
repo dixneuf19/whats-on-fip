@@ -23,7 +23,7 @@ def test_get_live(mocker):
 def test_get_live_mocked(mocker):
     # Test with Unofficial API KO
     mocker.patch(
-        "whats_on_fip.main.get_now_unofficial",
+        "whats_on_fip.radio_france_api.RadioFIP.get_current_track",
         return_value=None,
         side_effect=Exception(),
     )
