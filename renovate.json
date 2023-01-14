@@ -3,6 +3,7 @@
     "config:base",
     ":dependencyDashboard",
     ":automergeMinor",
+    ":automergeBranch",
     ":maintainLockFilesWeekly"
   ],
   "packageRules": [
