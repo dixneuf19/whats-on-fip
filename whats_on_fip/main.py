@@ -46,7 +46,6 @@ async def get_live(
         description="Short name of the Radio France station",
     )
 ) -> Track | JSONResponse:
-
     track = None
 
     # Use retro-engineered API if possible
