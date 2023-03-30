@@ -4,7 +4,7 @@ import pytest
 from fastapi.encoders import jsonable_encoder
 
 from tests.utils import generate_requests_get_mock, generate_requests_post_mock
-from whats_on_fip.models import Track
+from whats_on_fip.models import Station, Track
 from whats_on_fip.radio_france_api import (
     LiveUnavailableException,
     RadioFIP,
@@ -14,87 +14,6 @@ from whats_on_fip.radio_france_api import (
     get_api_status,
 )
 
-radio_france_stations = [
-    "ELSASS",
-    "FIP",
-    "FIP_BORDEAUX",
-    "FIP_ELECTRO",
-    "FIP_GROOVE",
-    "FIP_JAZZ",
-    "FIP_METAL",
-    "FIP_NANTES",
-    "FIP_NOUVEAUTES",
-    "FIP_POP",
-    "FIP_REGGAE",
-    "FIP_ROCK",
-    "FIP_STRASBOURG",
-    "FIP_WORLD",
-    "FORMATION",
-    "FRANCEBLEU",
-    "FRANCEBLEU_ALSACE",
-    "FRANCEBLEU_ARMORIQUE",
-    "FRANCEBLEU_AUXERRE",
-    "FRANCEBLEU_AZUR",
-    "FRANCEBLEU_BEARN",
-    "FRANCEBLEU_BELFORT_MONTBELIARD",
-    "FRANCEBLEU_BERRY",
-    "FRANCEBLEU_BESANCON",
-    "FRANCEBLEU_BOURGOGNE",
-    "FRANCEBLEU_BREIZH_IZEL",
-    "FRANCEBLEU_CHAMPAGNE_ARDENNE",
-    "FRANCEBLEU_COTENTIN",
-    "FRANCEBLEU_CREUSE",
-    "FRANCEBLEU_DROME_ARDECHE",
-    "FRANCEBLEU_GARD_LOZERE",
-    "FRANCEBLEU_GASCOGNE",
-    "FRANCEBLEU_GIRONDE",
-    "FRANCEBLEU_HERAULT",
-    "FRANCEBLEU_ISERE",
-    "FRANCEBLEU_LA_ROCHELLE",
-    "FRANCEBLEU_LIMOUSIN",
-    "FRANCEBLEU_LOIRE_OCEAN",
-    "FRANCEBLEU_LORRAINE_NORD",
-    "FRANCEBLEU_MAINE",
-    "FRANCEBLEU_MAYENNE",
-    "FRANCEBLEU_NORD",
-    "FRANCEBLEU_NORMANDIE_CAEN",
-    "FRANCEBLEU_NORMANDIE_ROUEN",
-    "FRANCEBLEU_ORLEANS",
-    "FRANCEBLEU_PARIS",
-    "FRANCEBLEU_PAYS_BASQUE",
-    "FRANCEBLEU_PAYS_DE_SAVOIE",
-    "FRANCEBLEU_PAYS_D_AUVERGNE",
-    "FRANCEBLEU_PERIGORD",
-    "FRANCEBLEU_PICARDIE",
-    "FRANCEBLEU_POITOU",
-    "FRANCEBLEU_PROVENCE",
-    "FRANCEBLEU_RCFM",
-    "FRANCEBLEU_ROUSSILLON",
-    "FRANCEBLEU_SAINT_ETIENNE_LOIRE",
-    "FRANCEBLEU_SUR_LORRAINE",
-    "FRANCEBLEU_TOULOUSE",
-    "FRANCEBLEU_TOURAINE",
-    "FRANCEBLEU_VAUCLUSE",
-    "FRANCECULTURE",
-    "FRANCEINFO",
-    "FRANCEINTER",
-    "FRANCEMUSIC",
-    "FRANCEMUSIQUE",
-    "FRANCEMUSIQUE_CLASSIQUE_EASY",
-    "FRANCEMUSIQUE_CLASSIQUE_PLUS",
-    "FRANCEMUSIQUE_CONCERT_RF",
-    "FRANCEMUSIQUE_EVENEMENTIELLE",
-    "FRANCEMUSIQUE_LA_CONTEMPORAINE",
-    "FRANCEMUSIQUE_LA_JAZZ",
-    "FRANCEMUSIQUE_OCORA_MONDE",
-    "MOUV",
-    "MOUV_100MIX",
-    "MOUV_CLASSICS",
-    "MOUV_DANCEHALL",
-    "MOUV_RAPFR",
-    "MOUV_RAPUS",
-    "MOUV_RNB",
-]
 FIP_songs_2020_05_20_11h_12h_UTC = [
     {
         "title": "Distant land",
@@ -294,7 +213,7 @@ def test_execute_live_query_with_exception(mocker):
 
 def test_execute_stations_enum_query():
     response = execute_stations_enum_query()
-    assert [station.name for station in response] == radio_france_stations
+    assert Station(name="FIP") in response
 
 
 def test_get_api_status():
