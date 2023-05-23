@@ -921,14 +921,14 @@ full = ["httpx (>=0.22.0)", "itsdangerous", "jinja2", "python-multipart", "pyyam
 
 [[package]]
 name = "types-requests"
-version = "2.30.0.0"
+version = "2.31.0.0"
 description = "Typing stubs for requests"
 category = "dev"
 optional = false
 python-versions = "*"
 files = [
-    {file = "types-requests-2.30.0.0.tar.gz", hash = "sha256:dec781054324a70ba64430ae9e62e7e9c8e4618c185a5cb3f87a6738251b5a31"},
-    {file = "types_requests-2.30.0.0-py3-none-any.whl", hash = "sha256:c6cf08e120ca9f0dc4fa4e32c3f953c3fba222bcc1db6b97695bce8da1ba9864"},
+    {file = "types-requests-2.31.0.0.tar.gz", hash = "sha256:c1c29d20ab8d84dff468d7febfe8e0cb0b4664543221b386605e14672b44ea25"},
+    {file = "types_requests-2.31.0.0-py3-none-any.whl", hash = "sha256:7c5cea7940f8e92ec560bbc468f65bf684aa3dcf0554a6f8c4710f5f708dc598"},
 ]
 
 [package.dependencies]
@@ -1033,4 +1033,4 @@ dev = ["black (>=19.3b0)", "pytest (>=4.6.2)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "672ecbc53546d295cf2746024a5d8c70f78acb4341dbbca523ddf5fef85154ab"
+content-hash = "6cc87918d25326fe301357b46d475d3523685a32d1d51d0590e4bd892c56a6b4"
