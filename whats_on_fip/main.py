@@ -1,4 +1,3 @@
-import os
 from typing import List
 
 from fastapi import FastAPI, Query
@@ -10,16 +9,8 @@ from whats_on_fip import radio_france_api
 from whats_on_fip.models import APIStatus, Message, Station, Track
 from whats_on_fip.radio_feelgood_api import RadioFeelGood
 from whats_on_fip.radio_fiftyfifty import Radio5050
-from whats_on_fip.radio_france_api import RadioFIP
 from whats_on_fip.radio_meuh_api import RadioMeuh
 from whats_on_fip.spotify_api import add_spotify_external_url
-
-USE_UNOFFICIAL_API = os.getenv("USE_UNOFFICIAL_API", "true") in (
-    "True",
-    "true",
-    "1",
-)
-
 
 app = FastAPI(
     title="What's on FIP ?",
@@ -48,33 +39,22 @@ async def get_live(
 ) -> Track | JSONResponse:
     track = None
 
-    # Use retro-engineered API if possible
-    if station == "FIP" and USE_UNOFFICIAL_API:
-        radio = RadioFIP()
-
-        try:
-            logger.info("Use unofficial API to fetch current track")
-            track = radio.get_current_track()
-        except Exception as e:
-            logger.warning("Error while using unofficial API: " + str(e))
-
-    if track is None:
-        # Radio France OpenAPI api: less reliable and complete
-        try:
-            track = radio_france_api.execute_live_query(station)
-        except radio_france_api.LiveUnavailableException as e:
-            logger.warning(e)
-            return JSONResponse(
-                content=jsonable_encoder(
-                    {
-                        "message": (
-                            "No information available about the "
-                            f"current track at {station}"
-                        )
-                    }
-                ),
-                status_code=219,
-            )
+    # Radio France OpenAPI api: less reliable and complete
+    try:
+        track = radio_france_api.execute_live_query(station)
+    except radio_france_api.LiveUnavailableException as e:
+        logger.warning(e)
+        return JSONResponse(
+            content=jsonable_encoder(
+                {
+                    "message": (
+                        "No information available about the "
+                        f"current track at {station}"
+                    )
+                }
+            ),
+            status_code=219,
+        )
 
     # Add spotify external_url if necessary
     try:

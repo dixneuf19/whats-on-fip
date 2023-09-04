@@ -21,12 +21,6 @@ def test_get_live(mocker):
 
 
 def test_get_live_mocked(mocker):
-    # Test with Unofficial API KO
-    mocker.patch(
-        "whats_on_fip.radio_france_api.RadioFIP.get_current_track",
-        return_value=None,
-        side_effect=Exception(),
-    )
     mocker.patch(
         "whats_on_fip.spotify_api.get_spotify_track",
         return_value=simple_queries_responses["logical song supertramp"],
