@@ -31,7 +31,7 @@ format:
 check-format:
 	poetry run isort --check .
 	poetry run black --check .
-	poetry run flake8 .
+	poetry run ruff .
 	poetry run mypy .
 
 test:
