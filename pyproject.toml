@@ -6,7 +6,7 @@ authors = ["Julen Dixneuf <julend@padok.fr>"]
 
 [tool.poetry.dependencies]
 python = "^3.11"
-fastapi = "==0.99.1"
+fastapi = "==0.103.1"
 uvicorn = "==0.22.0"
 loguru = "==0.7.1"
 requests = "==2.31.0"
