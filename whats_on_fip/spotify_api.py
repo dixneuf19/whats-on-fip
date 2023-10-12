@@ -52,7 +52,7 @@ def get_spotify_url(spotify_track_id: str) -> str:
 
 def add_spotify_external_url(input_track: Track) -> Track:
     logger.info(f"Looking for track {input_track} on spotify")
-    output_track = input_track.copy(deep=True)
+    output_track = input_track.model_copy(deep=True)
     if "spotify" not in output_track.external_urls:
         try:
             spotifyTrack = get_spotify_track(input_track)
