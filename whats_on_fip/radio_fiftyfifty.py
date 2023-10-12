@@ -24,8 +24,8 @@ class Radio5050(Radio):
         ]
         return [self.__parse_packet(p) for p in packets]
 
-    def __parse_packet(self, pack: packet) -> Any:
-        txt = pack.data.decode("utf-8")
+    def __parse_packet(self, pack: packet.Packet) -> Any:
+        txt = pack.data.decode("utf-8")  # pyright: ignore
         i = 0
         while txt[i].isnumeric():
             i += 1
