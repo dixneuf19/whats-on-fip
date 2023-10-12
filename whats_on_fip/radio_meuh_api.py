@@ -14,6 +14,7 @@ class RadioMeuh(Radio):
 
     def get_current_track(self) -> Track:
         r = requests.get(self.url)
+        r.raise_for_status()
         song = r.json()[0]
 
         song = {
