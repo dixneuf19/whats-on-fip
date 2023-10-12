@@ -32,7 +32,7 @@ EXPECTED_TRACK_OBJECT = Track(
 
 @pytest.mark.asyncio
 async def test_get_current_song_remote():
-    assert Track(**RadioFeelGood().get_current_track().dict())
+    assert Track(**RadioFeelGood().get_current_track().model_dump())
 
 
 def test_get_current_song_mocked(mocker):

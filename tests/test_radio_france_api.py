@@ -198,7 +198,7 @@ def test_execute_live_query():
         response = execute_live_query("FIP")
     except LiveUnavailableException:
         return
-    assert Track(**response.dict())
+    assert Track(**response.model_dump())
 
 
 def test_execute_live_query_with_exception(mocker):
