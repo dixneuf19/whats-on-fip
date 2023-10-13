@@ -171,7 +171,7 @@ def test_add_spotify_external_url_already_existing(mocker):
         external_urls={"spotify": "https://open.spotify.com/track/random-valid-id"},
     )
 
-    output_track = input_track.copy(deep=True)
+    output_track = input_track.model_copy(deep=True)
     output_track.external_urls["spotify_app"] = get_spotify_app_link(
         input_track.external_urls["spotify"]
     )

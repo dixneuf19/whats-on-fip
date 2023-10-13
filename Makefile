@@ -32,7 +32,7 @@ check-format:
 	poetry run isort --check .
 	poetry run black --check .
 	poetry run ruff .
-	poetry run mypy .
+	poetry run pyright .
 
 test:
 	poetry run pytest --cov=${PACKAGE_NAME} --cov-report=xml tests
