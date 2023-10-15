@@ -137,7 +137,7 @@ def test_add_spotify_external_url(mocker):
         **input_track_dict,
         external_urls=simple_queries_responses["logical song supertramp"][
             "external_urls"
-        ]
+        ],
     )
 
     assert add_spotify_external_url(input_track) == output_track

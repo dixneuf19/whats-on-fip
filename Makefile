@@ -11,31 +11,30 @@ KUBE_NAMESPACE=fip
 # Default target
 all: dev
 
-shell:
-	poetry shell
-
 install:
-	poetry install --only main
+	rye sync --no-dev
 
 install-dev:
-	poetry install
-	poetry run pre-commit install
+	rye sync
+
+install-ci:
+	rye sync --no-lock
 
 dev:
-	poetry run uvicorn ${PACKAGE_NAME}.main:app --reload
+	rye run uvicorn ${PACKAGE_NAME}.main:app --reload
 
 format:
-	poetry run isort .
-	poetry run black .
+	rye run isort .
+	rye run black .
 
 check-format:
-	poetry run isort --check .
-	poetry run black --check .
-	poetry run ruff .
-	poetry run pyright .
+	rye run isort --check .
+	rye run black --check .
+	rye run ruff .
+	rye run pyright
 
 test:
-	poetry run pytest --cov=${PACKAGE_NAME} --cov-report=xml tests
+	rye run pytest --cov=${PACKAGE_NAME} --cov-report=xml tests
 
 build:
 	docker build -t $(DOCKER_IMAGE_PATH) .

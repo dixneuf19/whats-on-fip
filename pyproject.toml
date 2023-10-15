@@ -1,34 +1,41 @@
-[tool.poetry]
+[project]
 name = "whats-on-fip"
 version = "0.1.0"
 description = ""
-authors = ["Julen Dixneuf <julend@padok.fr>"]
-
-[tool.poetry.dependencies]
-python = "^3.12"
-fastapi = "==0.103.2"
-uvicorn = "==0.23.2"
-loguru = "==0.7.2"
-requests = "==2.31.0"
-python-engineio = "==4.8.0"
-ruff = "^0.0.292"
-pydantic = ">=2.0.0"
-
-[tool.poetry.group.dev.dependencies]
-pytest = "==7.4.2"
-black = "==23.9.1"
-isort = "==5.12.0"
-pre-commit = "==3.5.0"
-pytest-asyncio = "==0.21.1"
-pytest-cov = "==4.1.0"
-pytest-mock = "==3.11.1"
-types-requests = "==2.31.0.9"
-httpx = "==0.25.0"
-pyright = "^1.1.331"
+authors = [
+    { name = "Julen Dixneuf", email = "julen@loudnaround.org" }
+]
+dependencies = [
+    "fastapi>=0.103.2",
+    "uvicorn>=0.23.2",
+    "loguru>=0.7.2",
+    "requests>=2.31.0",
+    "python-engineio>=4.8.0",
+    "pydantic>=2.4.2",
+]
+readme = "README.md"
+requires-python = ">= 3.8"
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.rye]
+managed = true
+dev-dependencies = [
+    "pytest>=7.4.2",
+    "black>=23.9.1",
+    "ruff>=0.0.292",
+    "isort>=5.12.0",
+    "pytest-asyncio>=0.21.1",
+    "pytest-cov>=4.1.0",
+    "pytest-mock>=3.11.1",
+    "pyright>=1.1.331",
+    "httpx>=0.25.0",
+]
+
+[tool.hatch.metadata]
+allow-direct-references = true
 
 # https://www.python.org/dev/peps/pep-0518/
 [tool.isort]
@@ -44,4 +51,5 @@ asyncio_mode = "auto"
 ignore = ["E501"]
 
 [tool.pyright]
+include = ["whats_on_fip"]
 exclude = ["tests/**"]
