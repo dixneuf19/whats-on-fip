@@ -17,6 +17,9 @@ install:
 install-dev:
 	rye sync
 
+install-ci:
+	rye sync --no-lock
+
 dev:
 	rye run uvicorn ${PACKAGE_NAME}.main:app --reload
 

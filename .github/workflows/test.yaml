@@ -12,9 +12,11 @@ jobs:
 
     - name: Install the latest version of rye
       uses: eifinger/setup-rye@v1
+      with:
+        enable-cache: true
       
     - name: Install development dependencies
-      run: make install-dev
+      run: make install-ci
 
     - name: Check for correct formatting, static typing, linting, etc...
       run: |
