@@ -11,7 +11,7 @@ ENV PYTHONUNBUFFERED=1 \
     PIP_DEFAULT_TIMEOUT=100
 
 COPY ./pyproject.toml ./requirements.lock ./
-RUN sed '/-e/d' requirements.lock > requirements.txt
+RUN sed '/-e file:./d' requirements.lock > requirements.txt
 RUN pip install -r /requirements.txt
 
 COPY ./whats_on_fip /whats_on_fip
