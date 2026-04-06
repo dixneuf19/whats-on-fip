@@ -1051,6 +1051,7 @@ slack = [
 ]
 telegram = [
     { name = "python-telegram-bot" },
+    { name = "setuptools" },
 ]
 
 [package.dev-dependencies]
@@ -1076,6 +1077,7 @@ requires-dist = [
     { name = "python-dotenv", specifier = ">=1.0.0" },
     { name = "python-engineio", specifier = ">=4.8.0" },
     { name = "python-telegram-bot", marker = "extra == 'telegram'", specifier = ">=13.0,<20.0" },
+    { name = "setuptools", marker = "extra == 'telegram'" },
     { name = "slack-bolt", marker = "extra == 'slack'", specifier = ">=1.18.0" },
     { name = "spotipy", specifier = ">=2.23.0" },
     { name = "urllib3", specifier = ">=1.26,<2" },
