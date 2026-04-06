@@ -4,11 +4,11 @@ from fastapi.responses import JSONResponse
 from loguru import logger
 
 from whats_on_fip import radio_france_api
+from whats_on_fip.deezer import add_deezer_external_url
 from whats_on_fip.models import APIStatus, Message, Station, Track
 from whats_on_fip.radio_feelgood_api import RadioFeelGood
 from whats_on_fip.radio_fiftyfifty import Radio5050
 from whats_on_fip.radio_meuh_api import RadioMeuh
-from whats_on_fip.spotify import add_spotify_external_url
 
 app = FastAPI(
     title="What's on FIP ?",
@@ -17,11 +17,11 @@ app = FastAPI(
 )
 
 
-def _enrich_with_spotify(track: Track) -> Track:
+def _enrich_with_deezer(track: Track) -> Track:
     try:
-        return add_spotify_external_url(track)
+        return add_deezer_external_url(track)
     except Exception as e:
-        logger.warning("Error while using spotify API: " + str(e))
+        logger.warning("Error while using Deezer API: " + str(e))
         return track
 
 
@@ -52,7 +52,7 @@ def get_live(
             status_code=219,
         )
 
-    return _enrich_with_spotify(track)
+    return _enrich_with_deezer(track)
 
 
 @app.get("/grid", response_model=list[Track])
@@ -77,14 +77,14 @@ def get_api_status() -> dict[str, int]:
 
 @app.get("/meuh", response_model=Track)
 def get_live_meuh() -> Track:
-    return _enrich_with_spotify(RadioMeuh().get_current_track())
+    return _enrich_with_deezer(RadioMeuh().get_current_track())
 
 
 @app.get("/5050", response_model=Track)
 def get_live_fiftyfifty() -> Track:
-    return _enrich_with_spotify(Radio5050().get_current_track())
+    return _enrich_with_deezer(Radio5050().get_current_track())
 
 
 @app.get("/feelgood", response_model=Track)
 def get_live_feelgood() -> Track:
-    return _enrich_with_spotify(RadioFeelGood().get_current_track())
+    return _enrich_with_deezer(RadioFeelGood().get_current_track())

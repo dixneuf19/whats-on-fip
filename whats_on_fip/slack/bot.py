@@ -9,11 +9,11 @@ from slack_bolt.oauth.oauth_settings import OAuthSettings
 from slack_sdk.oauth.installation_store import FileInstallationStore
 from slack_sdk.oauth.state_store import FileOAuthStateStore
 
+from whats_on_fip.deezer import add_deezer_external_url
 from whats_on_fip.models import FIP_RADIO, MEUH_RADIO
 from whats_on_fip.radio_france_api import LiveUnavailableException, execute_live_query
 from whats_on_fip.radio_meuh_api import RadioMeuh
 from whats_on_fip.slack.fmt import get_blocks, get_text
-from whats_on_fip.spotify import add_spotify_external_url
 
 load_dotenv()
 
@@ -43,9 +43,9 @@ def message_live(ack, say, command):
     try:
         track = execute_live_query("FIP")
         try:
-            track = add_spotify_external_url(track)
+            track = add_deezer_external_url(track)
         except Exception as e:
-            logger.warning(f"Error enriching with Spotify: {e}")
+            logger.warning(f"Error enriching with Deezer: {e}")
     except LiveUnavailableException:
         say(text="No live song information right now, is it _Club Jazzafip_ ?")
     else:
@@ -63,9 +63,9 @@ def message_meuh(ack, say, command):
     ack()
     track = RadioMeuh().get_current_track()
     try:
-        track = add_spotify_external_url(track)
+        track = add_deezer_external_url(track)
     except Exception as e:
-        logger.warning(f"Error enriching with Spotify: {e}")
+        logger.warning(f"Error enriching with Deezer: {e}")
     logger.debug(f"Fetched from Meuh API: {track}")
     blocks = get_blocks(track, MEUH_RADIO, command["user_id"])
     text = get_text(track)
