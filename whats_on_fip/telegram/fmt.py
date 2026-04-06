@@ -1,4 +1,4 @@
-from telegram.utils.helpers import escape_markdown
+from telegram.helpers import escape_markdown
 
 from whats_on_fip.models import FIP_RADIO, Radio, Track
 
