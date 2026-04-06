@@ -1,20 +1,18 @@
-from typing import Dict, Optional
-
 from pydantic import BaseModel
 
 
 class Track(BaseModel):
     title: str
-    album: Optional[str] = None
+    album: str | None = None
     artist: str
-    year: Optional[int] = None
-    label: Optional[str] = None
-    musical_kind: Optional[str] = None
-    external_urls: Dict[str, str] = {}
-    cover_url: Optional[str] = None
+    year: int | None = None
+    label: str | None = None
+    musical_kind: str | None = None
+    external_urls: dict[str, str] = {}
+    cover_url: str | None = None
 
     def __str__(self) -> str:
-        return self.title + f" ({self.year})" if self.year else "" + f" - {self.artist}"
+        return self.title + (f" ({self.year})" if self.year else "") + f" - {self.artist}"
 
 
 class Station(BaseModel):
@@ -23,7 +21,7 @@ class Station(BaseModel):
 
 class APIStatus(BaseModel):
     code: int
-    message: Optional[str] = None
+    message: str | None = None
 
 
 class Message(BaseModel):

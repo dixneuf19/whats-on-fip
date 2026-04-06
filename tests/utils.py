@@ -1,11 +1,11 @@
-from typing import Any, Dict, Optional
+from typing import Any
 from unittest.mock import Mock
 
 from niquests import Response
 
 
-def generate_requests_get_mock(json_response: Any, status_code: Optional[int] = 200):
-    def requests_get_mock(url: str, params: Optional[Dict[str, Any]] = {}) -> Response:
+def generate_requests_get_mock(json_response: Any, status_code: int | None = 200):
+    def requests_get_mock(url: str, params: dict[str, Any] | None = None) -> Response:
         _ = url, params
         resp = Mock(spec=Response)
         resp.status_code = status_code
@@ -15,11 +15,11 @@ def generate_requests_get_mock(json_response: Any, status_code: Optional[int] = 
     return requests_get_mock
 
 
-def generate_requests_post_mock(json_response: Any, status_code: Optional[int] = 200):
+def generate_requests_post_mock(json_response: Any, status_code: int | None = 200):
     def requests_get_mock(
         url: str,
-        json: Optional[Dict[str, Any]] = {},
-        payload: Optional[Dict[str, Any]] = {},
+        json: dict[str, Any] | None = None,
+        payload: dict[str, Any] | None = None,
     ) -> Response:
         _ = url, json, payload
         resp = Mock(spec=Response)

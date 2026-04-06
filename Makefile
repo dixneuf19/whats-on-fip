@@ -1,9 +1,9 @@
 .PHONY: install install-dev install-ci dev dev-api format check-format test build run
 
-DOCKER_REPOSITERY=dixneuf19
+DOCKER_REPOSITORY=dixneuf19
 IMAGE_NAME=whats-on-fip
 IMAGE_TAG=$(shell git rev-parse --short HEAD)
-DOCKER_IMAGE_PATH=$(DOCKER_REPOSITERY)/$(IMAGE_NAME):$(IMAGE_TAG)
+DOCKER_IMAGE_PATH=$(DOCKER_REPOSITORY)/$(IMAGE_NAME):$(IMAGE_TAG)
 APP_NAME=whats-on-fip
 KUBE_NAMESPACE=fip
 
@@ -26,7 +26,7 @@ dev-api:
 
 format:
 	uv run ruff format .
-	uv run ruff check --select I --fix .
+	uv run ruff check --fix .
 
 check-format:
 	uv run ruff format --check .

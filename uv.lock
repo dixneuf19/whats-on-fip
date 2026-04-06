@@ -1071,7 +1071,7 @@ requires-dist = [
     { name = "dateparser", specifier = ">=1.1.1" },
     { name = "fastapi", specifier = ">=0.103.2" },
     { name = "loguru", specifier = ">=0.7.2" },
-    { name = "niquests", specifier = ">=3.0" },
+    { name = "niquests", specifier = ">=3" },
     { name = "pydantic", specifier = ">=2.4.2" },
     { name = "python-dotenv", specifier = ">=1.0.0" },
     { name = "python-engineio", specifier = ">=4.8.0" },
@@ -1091,9 +1091,9 @@ dev = [
     { name = "pytest-cov", specifier = ">=4.1.0" },
     { name = "pytest-mock", specifier = ">=3.11.1" },
     { name = "python-telegram-bot", specifier = ">=13.0,<20.0" },
-    { name = "ruff", specifier = ">=0.11.0" },
+    { name = "ruff", specifier = ">=0.12" },
     { name = "slack-bolt", specifier = ">=1.18.0" },
-    { name = "ty" },
+    { name = "ty", specifier = ">=0.0.20" },
 ]
 
 [[package]]

@@ -1,6 +1,6 @@
 import os
 
-import niquests as requests
+import niquests
 
 from whats_on_fip.models import Track
 from whats_on_fip.radio import Radio
@@ -11,7 +11,7 @@ class RadioMeuh(Radio):
         self.url = os.getenv("RADIO_MEUH_API_URL", "https://www.radiomeuh.com/storage/curtrack.json")
 
     def get_current_track(self) -> Track:
-        r = requests.get(self.url)
+        r = niquests.get(self.url)
         r.raise_for_status()
         song = r.json()[0]
 

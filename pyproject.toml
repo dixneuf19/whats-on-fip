@@ -9,7 +9,7 @@ dependencies = [
     "fastapi>=0.103.2",
     "uvicorn>=0.23.2",
     "loguru>=0.7.2",
-    "niquests>=3.0",
+    "niquests>=3",
     "python-engineio>=4.8.0",
     "pydantic>=2.4.2",
     "spotipy>=2.23.0",
@@ -34,12 +34,12 @@ build-backend = "hatchling.build"
 
 [dependency-groups]
 dev = [
+    "ruff>=0.12",
     "pytest>=7.4.2",
     "pytest-asyncio>=0.21.1",
     "pytest-cov>=4.1.0",
     "pytest-mock>=3.11.1",
-    "ruff>=0.11.0",
-    "ty",
+    "ty>=0.0.20",
     "httpx>=0.25.0",
     "python-telegram-bot>=13.0,<20.0",
     "slack-bolt>=1.18.0",
@@ -48,9 +48,6 @@ dev = [
 [tool.hatch.metadata]
 allow-direct-references = true
 
-[tool.hatch.build.targets.wheel]
-packages = ["whats_on_fip"]
-
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 
@@ -58,8 +55,8 @@ asyncio_mode = "auto"
 line-length = 120
 
 [tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
 ignore = ["E501"]
-select = ["E", "F", "I", "W"]
 
 [tool.ty.environment]
 python-version = "3.12"

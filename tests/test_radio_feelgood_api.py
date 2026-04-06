@@ -15,7 +15,7 @@ EXAMPLE_FEELGOOD_API_RESPONSE = [
             "id": "j5gq4Gxs7G",
             "title": "SAM FELDT",
             "artist": "HAPPY HOUR DJ",
-            "coverUrl": "https://www.lesindesradios.fr/servicesimb/images?version=6&iid=h/ha/happyhourdj/samfeldt&width=300",  # noqa:E501
+            "coverUrl": "https://www.lesindesradios.fr/servicesimb/images?version=6&iid=h/ha/happyhourdj/samfeldt&width=300",
             "spotifyId": None,
             "deezerId": None,
             "coverId": "h/ha/happyhourdj/samfeldt",
@@ -26,7 +26,7 @@ EXAMPLE_FEELGOOD_API_RESPONSE = [
 EXPECTED_TRACK_OBJECT = Track(
     title="SAM FELDT",
     artist="HAPPY HOUR DJ",
-    cover_url="https://images.lesindesradios.fr/fit-in/300x2000/filters:quality(100)/radios/radiofg/radiostream/5gWkrl9VKE/vignette_awN7JwWOid.jpeg",  # noqa:E501
+    cover_url="https://images.lesindesradios.fr/fit-in/300x2000/filters:quality(100)/radios/radiofg/radiostream/5gWkrl9VKE/vignette_awN7JwWOid.jpeg",
 )
 
 

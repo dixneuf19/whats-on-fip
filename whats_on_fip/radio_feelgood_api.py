@@ -1,7 +1,7 @@
 import os
 from time import time
 
-import niquests as requests
+import niquests
 
 from whats_on_fip.models import Track
 from whats_on_fip.radio import Radio
@@ -15,14 +15,14 @@ class RadioFeelGood(Radio):
             "size": "1",  # Select only the last song
             "radioStreamId": "2174546520932614607",
         }
-        self.cover_url = "https://images.lesindesradios.fr/fit-in/300x2000/filters:quality(100)/radios/radiofg/radiostream/5gWkrl9VKE/vignette_awN7JwWOid.jpeg"  # noqa:E501
+        self.cover_url = "https://images.lesindesradios.fr/fit-in/300x2000/filters:quality(100)/radios/radiofg/radiostream/5gWkrl9VKE/vignette_awN7JwWOid.jpeg"
 
     def get_current_track(self) -> Track:
         # 1. Generate current timestamp + 000 (reverse-engineered)
         current_ts = f"{int(time())}000"
 
         # 2. Query API for this timestamp
-        res = requests.get(self.url, params={**self.common_params, "date": current_ts})
+        res = niquests.get(self.url, params={**self.common_params, "date": current_ts})
         res.raise_for_status()
 
         song = res.json()[0]["title"]
@@ -35,7 +35,6 @@ class RadioFeelGood(Radio):
         song = {
             **song,
             "external_urls": external_urls,
-            # "cover_url"  # Hard to compute for now, serve generic radio FG Thumbnail
             "cover_url": self.cover_url,
         }
 

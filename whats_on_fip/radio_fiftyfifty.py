@@ -1,8 +1,8 @@
 import json
 import os
-from typing import Any, List
+from typing import Any
 
-import niquests as requests
+import niquests
 from engineio import packet
 
 from whats_on_fip.models import Track
@@ -14,7 +14,7 @@ class Radio5050(Radio):
         self.url = os.getenv("RADIO_5050_URL", "https://www.radio5050.com/realtime/socket.io/")
         self.common_params = {"EIO": "4", "transport": "polling"}
 
-    def __parse_response(self, res: requests.Response) -> List[Any]:
+    def __parse_response(self, res: niquests.Response) -> list[Any]:
         assert res.content is not None
         encoded_packets = res.content.split(b"\x1e")
         packets = [packet.Packet(encoded_packet=encoded_packet) for encoded_packet in encoded_packets]
@@ -30,30 +30,32 @@ class Radio5050(Radio):
 
     def get_current_track(self) -> Track:
         # 1. Get a SID
-        res = requests.get(self.url, params=self.common_params)
+        res = niquests.get(self.url, params=self.common_params)
         res.raise_for_status()
         sid = self.__parse_response(res)[0]["sid"]
 
         common_params_with_sid = {"sid": sid, **self.common_params}
 
         # 2. Connect to namespace
-        res = requests.post(self.url, params=common_params_with_sid, data="40".encode("utf-8"))
+        res = niquests.post(self.url, params=common_params_with_sid, data=b"40")
         res.raise_for_status()
-        if not (res.content or b"").decode("utf-8") == "ok":
+        assert res.content is not None
+        if not res.content.decode("utf-8") == "ok":
             raise Exception("failed to connect to namespace")
 
         # 3. Emit a subscribe event to nowplaying-room
-        res = requests.post(
+        res = niquests.post(
             self.url,
             params=common_params_with_sid,
-            data='42["subscribe","nowplaying-room"]'.encode("utf-8"),
+            data=b'42["subscribe","nowplaying-room"]',
         )
         res.raise_for_status()
-        if not (res.content or b"").decode("utf-8") == "ok":
+        assert res.content is not None
+        if not res.content.decode("utf-8") == "ok":
             raise Exception("failed suscribe to nowplaying-room")
 
         # 4. Get the value
-        res = requests.get(self.url, params=common_params_with_sid)
+        res = niquests.get(self.url, params=common_params_with_sid)
         res.raise_for_status()
 
         song = self.__parse_response(res)[-1][-1]["history"][0]

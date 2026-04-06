@@ -1,11 +1,10 @@
 import os
-from typing import Any, Dict, List
+from typing import Any
 
-import niquests as requests
+import niquests
 from loguru import logger
 
 from whats_on_fip.models import Station, Track
-from whats_on_fip.radio import Radio
 
 API_TOKEN = os.getenv("RADIO_FRANCE_API_TOKEN")
 
@@ -18,27 +17,21 @@ class LiveUnavailableException(Exception):
     pass
 
 
-class RadioFIP(Radio):
-    def __init__(self) -> None:
-        self.station = "FIP"
-        self.url = RADIO_FRANCE_API_URL
-
-    def get_current_track(self) -> Track:
-        return execute_live_query(self.station)
-
-
-def convert_to_track(data: Dict[str, Any]) -> Track:
+def convert_to_track(data: dict[str, Any]) -> Track:
     track = data["track"]
-    kwargs: dict[str, Any] = {
-        **track,
-        "artist": track["mainArtists"][0] if "mainArtists" in track.keys() and len(track["mainArtists"]) > 0 else "",
-        "year": track["productionDate"],
-        "album": track["albumTitle"],
-    }
-    return Track(**kwargs)
+    return Track(
+        **{  # ty: ignore[invalid-argument-type]
+            **track,
+            "artist": track["mainArtists"][0]
+            if "mainArtists" in track.keys() and len(track["mainArtists"]) > 0
+            else "",
+            "year": track["productionDate"],
+            "album": track["albumTitle"],
+        }
+    )
 
 
-def execute_grid_query(start: int, end: int, station: str = "FIP") -> List[Track]:
+def execute_grid_query(start: int, end: int, station: str = "FIP") -> list[Track]:
     logger.info(f"Querying the GraphQL API for {station} from {start} to {end}")
     query = f"""{{
             grid(start: {start}, end: {end}, station: {station}) {{
@@ -54,7 +47,7 @@ def execute_grid_query(start: int, end: int, station: str = "FIP") -> List[Track
             }}
         }}
     """
-    res = requests.post(RADIO_FRANCE_API_URL, json={"query": query})
+    res = niquests.post(RADIO_FRANCE_API_URL, json={"query": query})
     res.raise_for_status()
     data = res.json()["data"]
     return [convert_to_track(t) for t in data["grid"]]
@@ -77,20 +70,20 @@ def execute_live_query(station: str = "FIP") -> Track:
             }}
         }}
         """
-    res = requests.post(RADIO_FRANCE_API_URL, json={"query": query})
+    res = niquests.post(RADIO_FRANCE_API_URL, json={"query": query})
     res.raise_for_status()
     data = res.json()["data"]
     if data["live"]["song"] is None:
         raise LiveUnavailableException(
-            (f"invalid result for live {station} query. Status code '{res.status_code}' - {data}")
+            f"invalid result for live {station} query. Status code '{res.status_code}' - {data}"
         )
     return convert_to_track(data["live"]["song"])
 
 
-def execute_stations_enum_query() -> List[Station]:
+def execute_stations_enum_query() -> list[Station]:
     logger.info("Querying the GraphQL API for all Radio France stations")
     query = '{__type(name: "StationsEnum") {enumValues {name}}}'
-    res = requests.post(RADIO_FRANCE_API_URL, json={"query": query})
+    res = niquests.post(RADIO_FRANCE_API_URL, json={"query": query})
     res.raise_for_status()
     data = res.json()["data"]
     return [Station(name=station["name"]) for station in data["__type"]["enumValues"]]
@@ -98,10 +91,11 @@ def execute_stations_enum_query() -> List[Station]:
 
 def get_api_status() -> int:
     logger.info("Fetching api status")
-    res = requests.post(
+    res = niquests.post(
         url=RADIO_FRANCE_API_URL,
         json={
             "query": "{ __typename }",
         },
     )
-    return res.status_code or 500
+    assert res.status_code is not None
+    return res.status_code

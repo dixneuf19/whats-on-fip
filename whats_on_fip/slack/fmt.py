@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from whats_on_fip.models import Radio, Track
 
@@ -36,7 +36,7 @@ def get_external_url_provider_name(external_url_provider: str) -> str:
         return external_url_provider.title()
 
 
-def get_radio_section(radio: Radio, user_id: Optional[str] = ""):
+def get_radio_section(radio: Radio, user_id: str | None = ""):
     text = f"*Live on {radio.name} !*"
     if user_id and user_id != "":
         text += f" for <@{user_id}>"
@@ -64,8 +64,8 @@ def get_text(track: Track) -> str:
     return text
 
 
-def get_track_section(track: Track) -> Dict[str, Any]:
-    track_section: Dict[str, Any] = {
+def get_track_section(track: Track) -> dict[str, Any]:
+    track_section: dict[str, Any] = {
         "type": "section",
         "text": {"type": "mrkdwn", "text": get_text(track)},
     }
@@ -80,7 +80,7 @@ def get_track_section(track: Track) -> Dict[str, Any]:
     return track_section
 
 
-def get_external_url_buttons(track: Track) -> List[Dict[str, Any]]:
+def get_external_url_buttons(track: Track) -> list[dict[str, Any]]:
     buttons = []
     for provider in external_url_provider_order:
         if provider in track.external_urls:
@@ -97,8 +97,8 @@ def get_external_url_buttons(track: Track) -> List[Dict[str, Any]]:
     return buttons
 
 
-def get_blocks(track: Track, radio: Radio, user_id: Optional[str] = "") -> List[Dict[str, Any]]:
-    blocks: List[Dict[str, Any]] = []
+def get_blocks(track: Track, radio: Radio, user_id: str | None = "") -> list[dict[str, Any]]:
+    blocks: list[dict[str, Any]] = []
 
     blocks.append(get_radio_section(radio, user_id))
     blocks.append({"type": "divider"})
