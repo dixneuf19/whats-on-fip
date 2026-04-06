@@ -1,7 +1,7 @@
 [project]
 name = "whats-on-fip"
-version = "0.1.0"
-description = ""
+version = "0.2.0"
+description = "What's playing on FIP and other radios - with Telegram and Slack bots"
 authors = [
     { name = "Julen Dixneuf", email = "julen@loudnaround.org" }
 ]
@@ -9,47 +9,61 @@ dependencies = [
     "fastapi>=0.103.2",
     "uvicorn>=0.23.2",
     "loguru>=0.7.2",
-    "requests>=2.31.0",
+    "niquests>=3.0",
     "python-engineio>=4.8.0",
     "pydantic>=2.4.2",
+    "spotipy>=2.23.0",
+    "dateparser>=1.1.1",
+    "python-dotenv>=1.0.0",
+    "urllib3>=1.26,<2",  # python-telegram-bot v13 is incompatible with urllib3 v2
 ]
 readme = "README.md"
-requires-python = ">= 3.8"
+requires-python = ">= 3.12"
+
+[project.optional-dependencies]
+telegram = [
+    "python-telegram-bot>=13.0,<20.0",
+]
+slack = [
+    "slack-bolt>=1.18.0",
+]
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
-[tool.rye]
-managed = true
-dev-dependencies = [
+[dependency-groups]
+dev = [
     "pytest>=7.4.2",
-    "black>=23.9.1",
-    "ruff>=0.0.292",
-    "isort>=5.12.0",
     "pytest-asyncio>=0.21.1",
     "pytest-cov>=4.1.0",
     "pytest-mock>=3.11.1",
-    "pyright>=1.1.331",
+    "ruff>=0.11.0",
+    "ty",
     "httpx>=0.25.0",
+    "python-telegram-bot>=13.0,<20.0",
+    "slack-bolt>=1.18.0",
 ]
 
 [tool.hatch.metadata]
 allow-direct-references = true
 
-# https://www.python.org/dev/peps/pep-0518/
-[tool.isort]
-profile = "black"
+[tool.hatch.build.targets.wheel]
+packages = ["whats_on_fip"]
 
-# Fix deprecation warning
-# https://github.com/pytest-dev/pytest-asyncio/blob/d8efa640f0aa1ba8856b908ba486150588018209/pytest_asyncio/plugin.py#L61
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 
 [tool.ruff]
-# Never enforce `E501` (line length violations).
-ignore = ["E501"]
+line-length = 120
 
-[tool.pyright]
+[tool.ruff.lint]
+ignore = ["E501"]
+select = ["E", "F", "I", "W"]
+
+[tool.ty.environment]
+python-version = "3.12"
+
+[tool.ty.src]
 include = ["whats_on_fip"]
-exclude = ["tests/**"]
+exclude = ["tests"]

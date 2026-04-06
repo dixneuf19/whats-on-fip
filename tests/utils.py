@@ -1,7 +1,7 @@
 from typing import Any, Dict, Optional
 from unittest.mock import Mock
 
-from requests import Response
+from niquests import Response
 
 
 def generate_requests_get_mock(json_response: Any, status_code: Optional[int] = 200):

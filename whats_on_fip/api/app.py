@@ -10,7 +10,7 @@ from whats_on_fip.models import APIStatus, Message, Station, Track
 from whats_on_fip.radio_feelgood_api import RadioFeelGood
 from whats_on_fip.radio_fiftyfifty import Radio5050
 from whats_on_fip.radio_meuh_api import RadioMeuh
-from whats_on_fip.spotify_api import add_spotify_external_url
+from whats_on_fip.spotify import add_spotify_external_url
 
 app = FastAPI(
     title="What's on FIP ?",
@@ -35,7 +35,7 @@ async def get_live(
         "FIP",
         title="Station Name",
         description="Short name of the Radio France station",
-    )
+    ),
 ) -> Track | JSONResponse:
     track = None
 
@@ -45,14 +45,7 @@ async def get_live(
     except radio_france_api.LiveUnavailableException as e:
         logger.warning(e)
         return JSONResponse(
-            content=jsonable_encoder(
-                {
-                    "message": (
-                        "No information available about the "
-                        f"current track at {station}"
-                    )
-                }
-            ),
+            content=jsonable_encoder({"message": (f"No information available about the current track at {station}")}),
             status_code=219,
         )
 

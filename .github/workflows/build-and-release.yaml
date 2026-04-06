@@ -19,7 +19,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      # Generate automatically tags https://github.com/docker/metadata-action
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5
@@ -31,7 +30,6 @@ jobs:
             type=ref,event=tag
             type=ref,event=pr
             type=sha
-
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v4
@@ -46,7 +44,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Build the images
       - name: Build and push docker
         uses: docker/build-push-action@v7
         with:

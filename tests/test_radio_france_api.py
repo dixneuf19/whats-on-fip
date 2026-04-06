@@ -203,7 +203,7 @@ def test_execute_live_query():
 
 def test_execute_live_query_with_exception(mocker):
     mocker.patch(
-        "requests.post",
+        "niquests.post",
         new=generate_requests_post_mock({"data": {"live": {"song": None}}}, 200),
     )
     with pytest.raises(LiveUnavailableException):

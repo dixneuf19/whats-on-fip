@@ -2,7 +2,7 @@ import json
 import os
 from typing import Any, List
 
-import requests
+import niquests as requests
 from engineio import packet
 
 from whats_on_fip.models import Track
@@ -11,21 +11,17 @@ from whats_on_fip.radio import Radio
 
 class Radio5050(Radio):
     def __init__(self) -> None:
-        self.url = os.getenv(
-            "RADIO_5050_URL", "https://www.radio5050.com/realtime/socket.io/"
-        )
+        self.url = os.getenv("RADIO_5050_URL", "https://www.radio5050.com/realtime/socket.io/")
         self.common_params = {"EIO": "4", "transport": "polling"}
 
     def __parse_response(self, res: requests.Response) -> List[Any]:
+        assert res.content is not None
         encoded_packets = res.content.split(b"\x1e")
-        packets = [
-            packet.Packet(encoded_packet=encoded_packet)
-            for encoded_packet in encoded_packets
-        ]
+        packets = [packet.Packet(encoded_packet=encoded_packet) for encoded_packet in encoded_packets]
         return [self.__parse_packet(p) for p in packets]
 
     def __parse_packet(self, pack: packet.Packet) -> Any:
-        txt = pack.data.decode("utf-8")  # pyright: ignore
+        txt = pack.data.decode("utf-8")  # ty: ignore[unresolved-attribute]
         i = 0
         while txt[i].isnumeric():
             i += 1
@@ -41,11 +37,9 @@ class Radio5050(Radio):
         common_params_with_sid = {"sid": sid, **self.common_params}
 
         # 2. Connect to namespace
-        res = requests.post(
-            self.url, params=common_params_with_sid, data="40".encode("utf-8")
-        )
+        res = requests.post(self.url, params=common_params_with_sid, data="40".encode("utf-8"))
         res.raise_for_status()
-        if not res.content.decode("utf-8") == "ok":
+        if not (res.content or b"").decode("utf-8") == "ok":
             raise Exception("failed to connect to namespace")
 
         # 3. Emit a subscribe event to nowplaying-room
@@ -55,7 +49,7 @@ class Radio5050(Radio):
             data='42["subscribe","nowplaying-room"]'.encode("utf-8"),
         )
         res.raise_for_status()
-        if not res.content.decode("utf-8") == "ok":
+        if not (res.content or b"").decode("utf-8") == "ok":
             raise Exception("failed suscribe to nowplaying-room")
 
         # 4. Get the value

@@ -36,8 +36,6 @@ async def test_get_current_song_remote():
 
 
 def test_get_current_song_mocked(mocker):
-    mocker.patch(
-        "requests.get", new=generate_requests_get_mock(EXAMPLE_FEELGOOD_API_RESPONSE)
-    )
+    mocker.patch("niquests.get", new=generate_requests_get_mock(EXAMPLE_FEELGOOD_API_RESPONSE))
     track = RadioFeelGood().get_current_track()
     assert track == EXPECTED_TRACK_OBJECT

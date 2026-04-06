@@ -28,3 +28,14 @@ class APIStatus(BaseModel):
 
 class Message(BaseModel):
     message: str
+
+
+class Radio(BaseModel):
+    name: str
+    url: str
+
+
+FIP_RADIO = Radio(name="FIP", url="https://www.fip.fr")
+MEUH_RADIO = Radio(name="Radiomeuh", url="https://www.radiomeuh.com/")
+FIFTYFIFTY_RADIO = Radio(name="Radio5050", url="https://www.radio5050.com/")
+FEELGOOD_RADIO = Radio(name="Radio FG - Feel Good", url="https://www.radiofg.com/")

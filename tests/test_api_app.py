@@ -1,8 +1,8 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from tests.test_spotify_api import simple_queries_responses
-from whats_on_fip.main import app
+from tests.test_spotify import expected_tracks
+from whats_on_fip.api.app import app
 from whats_on_fip.models import Station, Track
 from whats_on_fip.radio_france_api import LiveUnavailableException
 
@@ -11,8 +11,8 @@ client = TestClient(app)
 
 def test_get_live(mocker):
     mocker.patch(
-        "whats_on_fip.spotify_api.get_spotify_track",
-        return_value=simple_queries_responses["logical song supertramp"],
+        "whats_on_fip.spotify.get_spotify_track",
+        return_value=expected_tracks["logical song supertramp"],
     )
     response = client.get("/live")
     assert response.status_code in (200, 219)
@@ -22,15 +22,15 @@ def test_get_live(mocker):
 
 def test_get_live_mocked(mocker):
     mocker.patch(
-        "whats_on_fip.spotify_api.get_spotify_track",
-        return_value=simple_queries_responses["logical song supertramp"],
+        "whats_on_fip.spotify.get_spotify_track",
+        return_value=expected_tracks["logical song supertramp"],
     )
     response = client.get("/live")
     assert response.status_code == 200
     assert Track(**response.json())
 
     mocker.patch(
-        "whats_on_fip.main.radio_france_api.execute_live_query",
+        "whats_on_fip.api.app.radio_france_api.execute_live_query",
         side_effect=LiveUnavailableException(),
     )
     response = client.get("/live")
@@ -39,9 +39,7 @@ def test_get_live_mocked(mocker):
 
 @pytest.mark.skip(reason="RadioFrance OpenAPI is unreliable")
 def test_get_grid():
-    response = client.get(
-        "/grid", params={"start": 1589972400, "end": 1589976000, "station": "FIP"}
-    )
+    response = client.get("/grid", params={"start": 1589972400, "end": 1589976000, "station": "FIP"})
     assert response.status_code == 200
     if response.status_code == 200:
         assert [Track(**t) for t in response.json()]
@@ -66,8 +64,8 @@ def test_get_api_status():
 
 def test_get_live_meuh(mocker):
     mocker.patch(
-        "whats_on_fip.spotify_api.get_spotify_track",
-        return_value=simple_queries_responses["logical song supertramp"],
+        "whats_on_fip.spotify.get_spotify_track",
+        return_value=expected_tracks["logical song supertramp"],
     )
     response = client.get("/meuh")
     assert response.status_code == 200
@@ -76,8 +74,8 @@ def test_get_live_meuh(mocker):
 
 def test_get_live_fiftyfifty(mocker):
     mocker.patch(
-        "whats_on_fip.spotify_api.get_spotify_track",
-        return_value=simple_queries_responses["logical song supertramp"],
+        "whats_on_fip.spotify.get_spotify_track",
+        return_value=expected_tracks["logical song supertramp"],
     )
     response = client.get("/5050")
     assert response.status_code == 200
@@ -86,8 +84,8 @@ def test_get_live_fiftyfifty(mocker):
 
 def test_get_live_feelgood(mocker):
     mocker.patch(
-        "whats_on_fip.spotify_api.get_spotify_track",
-        return_value=simple_queries_responses["logical song supertramp"],
+        "whats_on_fip.spotify.get_spotify_track",
+        return_value=expected_tracks["logical song supertramp"],
     )
     response = client.get("/feelgood")
     assert response.status_code == 200
