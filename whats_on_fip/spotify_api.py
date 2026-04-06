@@ -1,6 +1,6 @@
 import os
 
-import requests
+import niquests
 from loguru import logger
 
 from whats_on_fip.models import Track
@@ -19,8 +19,8 @@ def search_on_spotify(query: str) -> Track:
     logger.info(f"search for '{query}' on Spotify API")
     service_address = f"http://{SPOTIFY_API_HOST}:{SPOTIFY_API_PORT}/search"
     payload = {"q": query, "simple": str(True)}  # Get a flat simple response
-    r = requests.get(service_address, params=payload)
-    if r.status_code == requests.codes.not_found:
+    r = niquests.get(service_address, params=payload)
+    if r.status_code == 404:
         logger.info(f"no track found on Spotify with query '{query}'")
         raise SpotifyTrackNotFound("no track found on Spotify with query '{query}'")
     r.raise_for_status()
@@ -33,10 +33,7 @@ def get_spotify_track(input_track: Track) -> Track:
         spotifyTrack = search_on_spotify(query)
     except SpotifyTrackNotFound:
         # Try with a shorted query
-        query = (
-            f"{' '.join(input_track.title.split()[:2])} "
-            f"{' '.join(input_track.artist.split()[:2])}"
-        )
+        query = f"{' '.join(input_track.title.split()[:2])} {' '.join(input_track.artist.split()[:2])}"
         spotifyTrack = search_on_spotify(query)
     return spotifyTrack
 
@@ -58,15 +55,11 @@ def add_spotify_external_url(input_track: Track) -> Track:
             spotifyTrack = get_spotify_track(input_track)
             if "spotify" in spotifyTrack.external_urls:
                 logger.info("Adding a spotify url to track")
-                output_track.external_urls["spotify"] = spotifyTrack.external_urls[
-                    "spotify"
-                ]
+                output_track.external_urls["spotify"] = spotifyTrack.external_urls["spotify"]
         except SpotifyTrackNotFound:
             logger.warning(f"no spotify URL found for track {input_track}")
 
     if "spotify" in output_track.external_urls:
-        output_track.external_urls["spotify_app"] = get_spotify_app_link(
-            output_track.external_urls["spotify"]
-        )
+        output_track.external_urls["spotify_app"] = get_spotify_app_link(output_track.external_urls["spotify"])
 
     return output_track
