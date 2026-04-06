@@ -1,19 +1,16 @@
-# Dockerfile
-# Uses multi-stage builds requiring Docker 17.05 or higher
-# See https://docs.docker.com/develop/develop-images/multistage-build/
+FROM python:3.14-slim
 
-# Creating a python base with shared environment variables
-FROM python:3.12.0-slim
-ENV PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1 \
-    PIP_NO_CACHE_DIR=off \
-    PIP_DISABLE_PIP_VERSION_CHECK=on \
-    PIP_DEFAULT_TIMEOUT=100
+COPY --from=ghcr.io/astral-sh/uv:0.7 /uv /uvx /bin/
 
-COPY ./pyproject.toml ./requirements.lock ./
-RUN sed '/-e file:./d' requirements.lock > requirements.txt
-RUN pip install -r /requirements.txt
+ENV UV_COMPILE_BYTECODE=1
+ENV UV_LINK_MODE=copy
+ENV PATH="/app/.venv/bin:$PATH"
 
-COPY ./whats_on_fip /whats_on_fip
+WORKDIR /app
 
-CMD ["uvicorn", "whats_on_fip.main:app" , "--host", "0.0.0.0", "--port", "80"]
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-dev --no-install-project
+
+COPY ./whats_on_fip ./whats_on_fip
+
+CMD ["uvicorn", "whats_on_fip.main:app", "--host", "0.0.0.0", "--port", "80"]

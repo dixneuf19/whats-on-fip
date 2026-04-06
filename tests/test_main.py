@@ -39,9 +39,7 @@ def test_get_live_mocked(mocker):
 
 @pytest.mark.skip(reason="RadioFrance OpenAPI is unreliable")
 def test_get_grid():
-    response = client.get(
-        "/grid", params={"start": 1589972400, "end": 1589976000, "station": "FIP"}
-    )
+    response = client.get("/grid", params={"start": 1589972400, "end": 1589976000, "station": "FIP"})
     assert response.status_code == 200
     if response.status_code == 200:
         assert [Track(**t) for t in response.json()]

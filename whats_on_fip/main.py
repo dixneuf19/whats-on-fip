@@ -1,5 +1,3 @@
-from typing import List
-
 from fastapi import FastAPI, Query
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
@@ -19,6 +17,14 @@ app = FastAPI(
 )
 
 
+def _enrich_with_spotify(track: Track) -> Track:
+    try:
+        return add_spotify_external_url(track)
+    except Exception as e:
+        logger.warning("Error while using spotify API: " + str(e))
+        return track
+
+
 @app.get(
     "/live",
     response_model=Track,
@@ -30,48 +36,32 @@ app = FastAPI(
         200: {"description": "Current track live"},
     },
 )
-async def get_live(
+def get_live(
     station: str = Query(
         "FIP",
         title="Station Name",
         description="Short name of the Radio France station",
-    )
+    ),
 ) -> Track | JSONResponse:
-    track = None
-
-    # Radio France OpenAPI api: less reliable and complete
     try:
         track = radio_france_api.execute_live_query(station)
     except radio_france_api.LiveUnavailableException as e:
         logger.warning(e)
         return JSONResponse(
-            content=jsonable_encoder(
-                {
-                    "message": (
-                        "No information available about the "
-                        f"current track at {station}"
-                    )
-                }
-            ),
+            content=jsonable_encoder({"message": f"No information available about the current track at {station}"}),
             status_code=219,
         )
 
-    # Add spotify external_url if necessary
-    try:
-        track = add_spotify_external_url(track)
-    except Exception as e:
-        logger.warning("Error while using spotify API: " + str(e))
-
-    return track
+    return _enrich_with_spotify(track)
 
 
-@app.get("/grid", response_model=List[Track])
-async def get_grid(start: int, end: int, station: str = "FIP") -> List[Track]:
+@app.get("/grid", response_model=list[Track])
+def get_grid(start: int, end: int, station: str = "FIP") -> list[Track]:
     return radio_france_api.execute_grid_query(start, end, station)
 
 
-@app.get("/stations", response_model=List[Station])
-async def get_stations() -> List[Station]:
+@app.get("/stations", response_model=list[Station])
+def get_stations() -> list[Station]:
     return radio_france_api.execute_stations_enum_query()
 
 
@@ -81,44 +71,20 @@ async def get_health() -> dict[str, str]:
 
 
 @app.get("/api-status", response_model=APIStatus)
-async def get_api_status() -> dict[str, int]:
+def get_api_status() -> dict[str, int]:
     return {"code": radio_france_api.get_api_status()}
 
 
 @app.get("/meuh", response_model=Track)
-async def get_live_meuh() -> Track:
-    radio = RadioMeuh()
-    track = radio.get_current_track()
-    # Add spotify external_url if necessary
-    try:
-        track = add_spotify_external_url(track)
-    except Exception as e:
-        logger.warning("Error while using spotify API: " + str(e))
-
-    return track
+def get_live_meuh() -> Track:
+    return _enrich_with_spotify(RadioMeuh().get_current_track())
 
 
 @app.get("/5050", response_model=Track)
-async def get_live_fiftyfifty() -> Track:
-    radio = Radio5050()
-    track = radio.get_current_track()
-    # Add spotify external_url if necessary
-    try:
-        track = add_spotify_external_url(track)
-    except Exception as e:
-        logger.warning("Error while using spotify API: " + str(e))
-
-    return track
+def get_live_fiftyfifty() -> Track:
+    return _enrich_with_spotify(Radio5050().get_current_track())
 
 
 @app.get("/feelgood", response_model=Track)
-async def get_live_feelgood() -> Track:
-    radio = RadioFeelGood()
-    track = radio.get_current_track()
-    # Add spotify external_url if necessary
-    try:
-        track = add_spotify_external_url(track)
-    except Exception as e:
-        logger.warning("Error while using spotify API: " + str(e))
-
-    return track
+def get_live_feelgood() -> Track:
+    return _enrich_with_spotify(RadioFeelGood().get_current_track())

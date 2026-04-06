@@ -43,8 +43,6 @@ async def test_get_current_song_remote():
 
 
 def test_get_current_song_mocked(mocker):
-    mocker.patch(
-        "requests.get", new=generate_requests_get_mock(EXAMPLE_MEUH_API_RESPONSE)
-    )
+    mocker.patch("niquests.get", new=generate_requests_get_mock(EXAMPLE_MEUH_API_RESPONSE))
     track = RadioMeuh().get_current_track()
     assert track == EXPECTED_TRACK_OBJECT

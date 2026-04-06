@@ -1,7 +1,8 @@
-from typing import Any, Callable, Dict
+from collections.abc import Callable
+from typing import Any
 
 import pytest
-from requests import Response, get
+from niquests import Response, get
 
 from tests.utils import generate_requests_get_mock
 from whats_on_fip.models import Track
@@ -39,14 +40,12 @@ simple_queries_responses = {
 
 
 def generate_requests_get_mock_spotify_api(
-    resp_by_queries: Dict[str, Dict[str, Any]]
-) -> Callable[[str, Dict[str, Any]], Response]:
-    def request_get_spotify_api(url: str, params: Dict[str, Any]) -> Response:
+    resp_by_queries: dict[str, dict[str, Any]],
+) -> Callable[[str, dict[str, Any]], Response]:
+    def request_get_spotify_api(url: str, params: dict[str, Any]) -> Response:
         query = params["q"]
         if query in simple_queries_responses:
-            request_get_func = generate_requests_get_mock(
-                simple_queries_responses[query], 200
-            )
+            request_get_func = generate_requests_get_mock(simple_queries_responses[query], 200)
         else:
             request_get_func = generate_requests_get_mock({}, 404)
         return request_get_func(url, params)
@@ -56,7 +55,7 @@ def generate_requests_get_mock_spotify_api(
 
 def test_search_on_spotify(mocker):
     mocker.patch(
-        "requests.get",
+        "niquests.get",
         new=generate_requests_get_mock_spotify_api(simple_queries_responses),
     )
     for query in simple_queries_responses.keys():
@@ -65,7 +64,7 @@ def test_search_on_spotify(mocker):
 
 def test_search_on_spotify_unknow_track(mocker):
     mocker.patch(
-        "requests.get",
+        "niquests.get",
         new=generate_requests_get_mock_spotify_api(simple_queries_responses),
     )
     with pytest.raises(SpotifyTrackNotFound):
@@ -74,7 +73,7 @@ def test_search_on_spotify_unknow_track(mocker):
 
 def test_get_spotify_track(mocker):
     mocker.patch(
-        "requests.get",
+        "niquests.get",
         new=generate_requests_get_mock_spotify_api(simple_queries_responses),
     )
 
@@ -99,7 +98,7 @@ def test_get_spotify_track(mocker):
 
 def test_get_spotify_track_unknown(mocker):
     mocker.patch(
-        "requests.get",
+        "niquests.get",
         new=generate_requests_get_mock_spotify_api(simple_queries_responses),
     )
     input_track = Track(
@@ -116,14 +115,12 @@ def test_get_spotify_track_unknown(mocker):
 def test_get_spotify_app_link():
     for t in simple_queries_responses.values():
         if "spotify" in t["external_urls"]:
-            assert t["external_urls"]["spotify_app"] == get_spotify_app_link(
-                t["external_urls"]["spotify"]
-            )
+            assert t["external_urls"]["spotify_app"] == get_spotify_app_link(t["external_urls"]["spotify"])
 
 
 def test_add_spotify_external_url(mocker):
     mocker.patch(
-        "requests.get",
+        "niquests.get",
         new=generate_requests_get_mock_spotify_api(simple_queries_responses),
     )
     input_track_dict = {
@@ -135,9 +132,7 @@ def test_add_spotify_external_url(mocker):
 
     output_track = Track(
         **input_track_dict,
-        external_urls=simple_queries_responses["logical song supertramp"][
-            "external_urls"
-        ],
+        external_urls=simple_queries_responses["logical song supertramp"]["external_urls"],
     )
 
     assert add_spotify_external_url(input_track) == output_track
@@ -145,7 +140,7 @@ def test_add_spotify_external_url(mocker):
 
 def test_add_spotify_external_url_unknow(mocker):
     mocker.patch(
-        "requests.get",
+        "niquests.get",
         new=generate_requests_get_mock_spotify_api(simple_queries_responses),
     )
     input_track = Track(
@@ -161,7 +156,7 @@ def test_add_spotify_external_url_unknow(mocker):
 
 def test_add_spotify_external_url_already_existing(mocker):
     mocker.patch(
-        "requests.get",
+        "niquests.get",
         new=generate_requests_get_mock_spotify_api(simple_queries_responses),
     )
     input_track = Track(
@@ -172,9 +167,7 @@ def test_add_spotify_external_url_already_existing(mocker):
     )
 
     output_track = input_track.model_copy(deep=True)
-    output_track.external_urls["spotify_app"] = get_spotify_app_link(
-        input_track.external_urls["spotify"]
-    )
+    output_track.external_urls["spotify_app"] = get_spotify_app_link(input_track.external_urls["spotify"])
 
     assert add_spotify_external_url(input_track) == output_track
 
