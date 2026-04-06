@@ -8,7 +8,7 @@ from whats_on_fip.models import APIStatus, Message, Station, Track
 from whats_on_fip.radio_feelgood_api import RadioFeelGood
 from whats_on_fip.radio_fiftyfifty import Radio5050
 from whats_on_fip.radio_meuh_api import RadioMeuh
-from whats_on_fip.spotify_api import add_spotify_external_url
+from whats_on_fip.spotify import add_spotify_external_url
 
 app = FastAPI(
     title="What's on FIP ?",

@@ -1,7 +1,7 @@
 [project]
 name = "whats-on-fip"
-version = "0.1.0"
-description = ""
+version = "0.2.0"
+description = "What's playing on FIP and other radios - with Telegram and Slack bots"
 authors = [
     { name = "Julen Dixneuf", email = "julen@loudnaround.org" }
 ]
@@ -12,9 +12,21 @@ dependencies = [
     "niquests>=3",
     "python-engineio>=4.8.0",
     "pydantic>=2.4.2",
+    "spotipy>=2.23.0",
+    "dateparser>=1.1.1",
+    "python-dotenv>=1.0.0",
+    "urllib3>=1.26,<2",  # python-telegram-bot v13 is incompatible with urllib3 v2
 ]
 readme = "README.md"
-requires-python = ">= 3.14"
+requires-python = ">= 3.12"
+
+[project.optional-dependencies]
+telegram = [
+    "python-telegram-bot>=13.0,<20.0",
+]
+slack = [
+    "slack-bolt>=1.18.0",
+]
 
 [build-system]
 requires = ["hatchling"]
@@ -22,13 +34,15 @@ build-backend = "hatchling.build"
 
 [dependency-groups]
 dev = [
-    "pytest>=7.4.2",
     "ruff>=0.12",
+    "pytest>=7.4.2",
     "pytest-asyncio>=0.21.1",
     "pytest-cov>=4.1.0",
     "pytest-mock>=3.11.1",
     "ty>=0.0.20",
     "httpx>=0.25.0",
+    "python-telegram-bot>=13.0,<20.0",
+    "slack-bolt>=1.18.0",
 ]
 
 [tool.hatch.metadata]
@@ -43,6 +57,9 @@ line-length = 120
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP"]
 ignore = ["E501"]
+
+[tool.ty.environment]
+python-version = "3.12"
 
 [tool.ty.src]
 include = ["whats_on_fip"]

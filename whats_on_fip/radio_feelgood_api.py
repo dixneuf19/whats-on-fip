@@ -5,7 +5,7 @@ import niquests
 
 from whats_on_fip.models import Track
 from whats_on_fip.radio import Radio
-from whats_on_fip.spotify_api import get_spotify_url
+from whats_on_fip.spotify import get_spotify_url
 
 
 class RadioFeelGood(Radio):

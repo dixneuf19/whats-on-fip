@@ -1,6 +1,5 @@
-.PHONY: shell install install-dev dev build run push release release-multi deploy
+.PHONY: install install-dev install-ci dev dev-api format check-format test build run
 
-PACKAGE_NAME=whats_on_fip
 DOCKER_REPOSITORY=dixneuf19
 IMAGE_NAME=whats-on-fip
 IMAGE_TAG=$(shell git rev-parse --short HEAD)
@@ -8,8 +7,7 @@ DOCKER_IMAGE_PATH=$(DOCKER_REPOSITORY)/$(IMAGE_NAME):$(IMAGE_TAG)
 APP_NAME=whats-on-fip
 KUBE_NAMESPACE=fip
 
-# Default target
-all: dev
+all: dev-api
 
 install:
 	uv sync --no-dev
@@ -21,7 +19,10 @@ install-ci:
 	uv sync --frozen
 
 dev:
-	uv run uvicorn ${PACKAGE_NAME}.main:app --reload
+	uv run python -m whats_on_fip.telegram.bot
+
+dev-api:
+	uv run uvicorn whats_on_fip.api.app:app --reload
 
 format:
 	uv run ruff format .
@@ -33,13 +34,13 @@ check-format:
 	uv run ty check
 
 test:
-	uv run pytest --cov=${PACKAGE_NAME} --cov-report=xml tests
+	uv run pytest --cov=whats_on_fip --cov-report=xml tests
 
 build:
 	docker build -t $(DOCKER_IMAGE_PATH) .
 
 build-multi:
-	docker buildx build --platform linux/amd64,linux/arm64,linux/386,linux/arm/v7 -t $(DOCKER_IMAGE_PATH) .
+	docker buildx build --platform linux/amd64,linux/arm64 -t $(DOCKER_IMAGE_PATH) .
 
 run: build
 	docker run -p 8000:80 --env-file=.env $(DOCKER_IMAGE_PATH)
@@ -50,7 +51,7 @@ push:
 release: build push
 
 release-multi:
-	docker buildx build --platform linux/amd64,linux/arm64,linux/386,linux/arm/v7 -t $(DOCKER_IMAGE_PATH) . --push
+	docker buildx build --platform linux/amd64,linux/arm64 -t $(DOCKER_IMAGE_PATH) . --push
 
 deploy:
 	kubectl apply -f $(APP_NAME).yaml

@@ -1,12 +1,18 @@
-import os
-
-import niquests
+import spotipy
+from dateparser import parse as date_parse
 from loguru import logger
+from spotipy import SpotifyClientCredentials
 
 from whats_on_fip.models import Track
 
-SPOTIFY_API_HOST = os.getenv("SPOTIFY_API_HOST", "spotify-api")
-SPOTIFY_API_PORT = os.getenv("SPOTIFY_API_PORT", "80")
+_sp: spotipy.Spotify | None = None
+
+
+def _get_client() -> spotipy.Spotify:
+    global _sp
+    if _sp is None:
+        _sp = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
+    return _sp
 
 
 class SpotifyTrackNotFound(Exception):
@@ -17,25 +23,35 @@ class SpotifyTrackNotFound(Exception):
 
 def search_on_spotify(query: str) -> Track:
     logger.info(f"search for '{query}' on Spotify API")
-    service_address = f"http://{SPOTIFY_API_HOST}:{SPOTIFY_API_PORT}/search"
-    payload = {"q": query, "simple": str(True)}  # Get a flat simple response
-    r = niquests.get(service_address, params=payload)
-    if r.status_code == 404:
+    sp = _get_client()
+    res = sp.search(query, limit=1, offset=0, type="track")
+    if not res or len(res["tracks"]["items"]) == 0:
         logger.info(f"no track found on Spotify with query '{query}'")
-        raise SpotifyTrackNotFound("no track found on Spotify with query '{query}'")
-    r.raise_for_status()
-    return Track(**r.json())
+        raise SpotifyTrackNotFound(f"no track found on Spotify with query '{query}'")
+
+    item = res["tracks"]["items"][0]
+    artists = item.get("artists", [])
+    album = item.get("album", {})
+    release_date = album.get("release_date", "")
+    year = date_parse(release_date).year if release_date else None
+
+    return Track(
+        title=item["name"],
+        album=album.get("name"),
+        artist=artists[0]["name"] if artists else "",
+        year=year,
+        external_urls=item.get("external_urls", {}),
+    )
 
 
 def get_spotify_track(input_track: Track) -> Track:
     query = f"{input_track.title} {input_track.artist}"
     try:
-        spotifyTrack = search_on_spotify(query)
+        return search_on_spotify(query)
     except SpotifyTrackNotFound:
-        # Try with a shorted query
+        # Try with a shorter query
         query = f"{' '.join(input_track.title.split()[:2])} {' '.join(input_track.artist.split()[:2])}"
-        spotifyTrack = search_on_spotify(query)
-    return spotifyTrack
+        return search_on_spotify(query)
 
 
 def get_spotify_app_link(spotify_url: str) -> str:
@@ -52,10 +68,10 @@ def add_spotify_external_url(input_track: Track) -> Track:
     output_track = input_track.model_copy(deep=True)
     if "spotify" not in output_track.external_urls:
         try:
-            spotifyTrack = get_spotify_track(input_track)
-            if "spotify" in spotifyTrack.external_urls:
+            spotify_track = get_spotify_track(input_track)
+            if "spotify" in spotify_track.external_urls:
                 logger.info("Adding a spotify url to track")
-                output_track.external_urls["spotify"] = spotifyTrack.external_urls["spotify"]
+                output_track.external_urls["spotify"] = spotify_track.external_urls["spotify"]
         except SpotifyTrackNotFound:
             logger.warning(f"no spotify URL found for track {input_track}")
 
