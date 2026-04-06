@@ -5,7 +5,6 @@ import niquests
 
 from whats_on_fip.models import Track
 from whats_on_fip.radio import Radio
-from whats_on_fip.spotify import get_spotify_url
 
 
 class RadioFeelGood(Radio):
@@ -31,7 +30,7 @@ class RadioFeelGood(Radio):
 
         external_urls = {}
         if "spotifyId" in song and song["spotifyId"] is not None:
-            external_urls["spotify"] = get_spotify_url(song["spotifyId"])
+            external_urls["spotify"] = f"https://open.spotify.com/track/{song['spotifyId']}"
         song = {
             **song,
             "external_urls": external_urls,

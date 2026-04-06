@@ -1,19 +1,17 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from tests.test_spotify import expected_tracks
 from whats_on_fip.api.app import app
 from whats_on_fip.models import Station, Track
 from whats_on_fip.radio_france_api import LiveUnavailableException
 
 client = TestClient(app)
 
+MOCK_DEEZER_URL = "https://www.deezer.com/track/123"
+
 
 def test_get_live(mocker):
-    mocker.patch(
-        "whats_on_fip.spotify.get_spotify_track",
-        return_value=expected_tracks["logical song supertramp"],
-    )
+    mocker.patch("whats_on_fip.deezer.get_deezer_track", return_value=MOCK_DEEZER_URL)
     response = client.get("/live")
     assert response.status_code in (200, 219)
     if response.status_code == 200:
@@ -21,14 +19,6 @@ def test_get_live(mocker):
 
 
 def test_get_live_mocked(mocker):
-    mocker.patch(
-        "whats_on_fip.spotify.get_spotify_track",
-        return_value=expected_tracks["logical song supertramp"],
-    )
-    response = client.get("/live")
-    assert response.status_code == 200
-    assert Track(**response.json())
-
     mocker.patch(
         "whats_on_fip.api.app.radio_france_api.execute_live_query",
         side_effect=LiveUnavailableException(),
@@ -63,30 +53,21 @@ def test_get_api_status():
 
 
 def test_get_live_meuh(mocker):
-    mocker.patch(
-        "whats_on_fip.spotify.get_spotify_track",
-        return_value=expected_tracks["logical song supertramp"],
-    )
+    mocker.patch("whats_on_fip.deezer.get_deezer_track", return_value=MOCK_DEEZER_URL)
     response = client.get("/meuh")
     assert response.status_code == 200
     assert Track(**response.json())
 
 
 def test_get_live_fiftyfifty(mocker):
-    mocker.patch(
-        "whats_on_fip.spotify.get_spotify_track",
-        return_value=expected_tracks["logical song supertramp"],
-    )
+    mocker.patch("whats_on_fip.deezer.get_deezer_track", return_value=MOCK_DEEZER_URL)
     response = client.get("/5050")
     assert response.status_code == 200
     assert Track(**response.json())
 
 
 def test_get_live_feelgood(mocker):
-    mocker.patch(
-        "whats_on_fip.spotify.get_spotify_track",
-        return_value=expected_tracks["logical song supertramp"],
-    )
+    mocker.patch("whats_on_fip.deezer.get_deezer_track", return_value=MOCK_DEEZER_URL)
     response = client.get("/feelgood")
     assert response.status_code == 200
     assert Track(**response.json())

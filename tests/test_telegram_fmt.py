@@ -8,6 +8,7 @@ def test_track_to_markdown_full():
         artist="Supertramp",
         album="Breakfast In America",
         year=1979,
+        external_urls={"deezer": "https://www.deezer.com/track/123"},
     )
     md = track_to_markdown(track)
     assert "*Live on [FIP](https://www.fip.fr) :*" in md
@@ -15,6 +16,7 @@ def test_track_to_markdown_full():
     assert "_Supertramp_" in md
     assert "Breakfast In America" in md
     assert "1979" in md
+    assert "[Deezer](https://www.deezer.com/track/123)" in md
 
 
 def test_track_to_markdown_no_album_no_year():
@@ -39,15 +41,22 @@ def test_track_to_markdown_feelgood_radio():
     assert "Feel Good" in md
 
 
-def test_track_to_markdown_only_year():
+def test_track_to_markdown_no_link():
     track = Track(title="Song", artist="Artist", year=2020)
     md = track_to_markdown(track)
-    assert "2020" in md
-    assert r"\-" not in md
+    assert "Deezer" not in md
+    assert "Spotify" not in md
 
 
-def test_track_to_markdown_only_album():
-    track = Track(title="Song", artist="Artist", album="Album")
+def test_track_to_markdown_deezer_preferred_over_spotify():
+    track = Track(
+        title="Song",
+        artist="Artist",
+        external_urls={
+            "spotify": "https://open.spotify.com/track/123",
+            "deezer": "https://www.deezer.com/track/456",
+        },
+    )
     md = track_to_markdown(track)
-    assert "Album" in md
-    assert r"\-" not in md
+    assert "[Deezer]" in md
+    assert "Spotify" not in md

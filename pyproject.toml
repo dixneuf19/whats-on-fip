@@ -12,8 +12,6 @@ dependencies = [
     "niquests>=3",
     "python-engineio>=4.8.0",
     "pydantic>=2.4.2",
-    "spotipy>=2.23.0",
-    "dateparser>=1.1.1",
     "python-dotenv>=1.0.0",
 ]
 readme = "README.md"

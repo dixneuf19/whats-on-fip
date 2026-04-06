@@ -6,6 +6,7 @@ from telegram.constants import ParseMode
 from telegram.ext import ContextTypes
 from telegram.helpers import escape_markdown
 
+from whats_on_fip.deezer import add_deezer_external_url
 from whats_on_fip.models import (
     FEELGOOD_RADIO,
     FIFTYFIFTY_RADIO,
@@ -18,12 +19,9 @@ from whats_on_fip.radio_feelgood_api import RadioFeelGood
 from whats_on_fip.radio_fiftyfifty import Radio5050
 from whats_on_fip.radio_france_api import LiveUnavailableException, execute_live_query
 from whats_on_fip.radio_meuh_api import RadioMeuh
-from whats_on_fip.spotify import add_spotify_external_url
 from whats_on_fip.telegram.fmt import track_to_markdown
 
 ERROR_MESSAGE = """Hum something went wrong... \nPing @dixneuf19 !"""
-
-TRACK_PROVIDERS = ["spotify", "youtube", "deezer", "itunes"]
 
 
 async def _handle_radio(
@@ -39,11 +37,10 @@ async def _handle_radio(
     try:
         track = fetch_track()
 
-        # Enrich with Spotify URL
         try:
-            track = add_spotify_external_url(track)
+            track = add_deezer_external_url(track)
         except Exception as e:
-            logging.warning(f"Error enriching with Spotify: {e}")
+            logging.warning(f"Error enriching with Deezer: {e}")
 
         logging.info(f"Found this song live: {track}")
         await message.reply_text(
@@ -51,17 +48,6 @@ async def _handle_radio(
             parse_mode=ParseMode.MARKDOWN_V2,
             disable_web_page_preview=True,
         )
-
-        # Send a link with the music
-        for provider in TRACK_PROVIDERS:
-            if provider in track.external_urls:
-                msg = f"Found this on {provider.title()} !\n\n{track.external_urls[provider]}"
-                logging.info(msg.replace("\n", " "))
-                await message.reply_text(msg)
-                return
-
-        logging.info("No external urls found")
-        await message.reply_text("Not found on Spotify")
 
     except LiveUnavailableException:
         logging.info("No track information available right now")
