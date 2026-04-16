@@ -5,7 +5,8 @@
     {
       "description": "Group all Python runtime version updates into a single PR",
       "matchDepNames": ["python"],
-      "groupName": "python runtime version"
+      "groupName": "python runtime version",
+      "recreateWhen": "always"
     }
   ]
 }
