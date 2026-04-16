@@ -1,4 +1,12 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["local>dixneuf19/renovate-presets"]
+  "extends": ["local>dixneuf19/renovate-presets"],
+  "packageRules": [
+    {
+      "description": "Group all Python runtime version updates into a single PR",
+      "matchDepNames": ["python"],
+      "groupName": "python runtime version",
+      "versioning": "pep440"
+    }
+  ]
 }
