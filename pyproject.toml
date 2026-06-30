@@ -10,7 +10,7 @@ dependencies = [
     "uvicorn>=0.23.2",
     "loguru>=0.7.2",
     "niquests>=3",
-    "python-engineio>=4.8.0",
+    "python-engineio>=4.13.2",
     "pydantic>=2.4.2",
     "python-dotenv>=1.0.0",
 ]
