@@ -58,3 +58,6 @@ ignore = ["E501"]
 [tool.ty.src]
 include = ["whats_on_fip"]
 exclude = ["tests"]
+
+[tool.uv]
+exclude-newer = "3 days"
